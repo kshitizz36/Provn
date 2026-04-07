@@ -16,31 +16,22 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # macOS Apple Silicon
           - os: macos-14
             target: aarch64-apple-darwin
             artifact: provn-aarch64-apple-darwin
             ext: ""
-
-          # macOS Intel
           - os: macos-13
             target: x86_64-apple-darwin
             artifact: provn-x86_64-apple-darwin
             ext: ""
-
-          # Linux x86_64 (static musl — runs on any distro)
           - os: ubuntu-latest
             target: x86_64-unknown-linux-musl
             artifact: provn-x86_64-linux
             ext: ""
-
-          # Linux ARM64 (Raspberry Pi, AWS Graviton, etc.)
           - os: ubuntu-latest
             target: aarch64-unknown-linux-musl
             artifact: provn-aarch64-linux
             ext: ""
-
-          # Windows x86_64
           - os: windows-latest
             target: x86_64-pc-windows-msvc
             artifact: provn-x86_64-windows
@@ -122,27 +113,38 @@ jobs:
           path: artifacts
           merge-multiple: true
 
+      - name: Generate release notes
+        run: |
+          {
+            echo "## Install"
+            echo
+            echo "**curl installer (macOS, Linux)**"
+            echo '```bash'
+            echo "curl -fsSL https://raw.githubusercontent.com/${{ github.repository }}/main/install.sh | bash"
+            echo '```'
+            echo
+            echo "**npm**"
+            echo '```bash'
+            echo "npm install -g @kshitizz36/provn"
+            echo '```'
+            echo
+            echo "**Homebrew**"
+            echo '```bash'
+            echo "brew install kshitizz36/tap/provn"
+            echo '```'
+            echo
+            echo "## Checksums"
+            echo
+            echo '```text'
+            cat artifacts/*.sha256 2>/dev/null || echo 'see attached .sha256 files'
+            echo '```'
+          } > release-notes.md
+
       - name: Create release
         uses: softprops/action-gh-release@v2
         with:
           name: "Provn ${{ github.ref_name }}"
-          body: |
-            ## Install
-
-            **macOS (Apple Silicon)**
-            ```bash
-            curl -fsSL https://raw.githubusercontent.com/${{ github.repository }}/main/install.sh | bash
-            ```
-
-            **macOS (Intel) / Linux / Windows** — see [install instructions](https://github.com/${{ github.repository }}#install).
-
-            ## Changes
-            See [commits](https://github.com/${{ github.repository }}/commits/${{ github.ref_name }}) since last release.
-
-            ## SHA-256 checksums
-            ```
-            $(cat artifacts/*.sha256 2>/dev/null || echo 'see attached .sha256 files')
-            ```
+          body_path: release-notes.md
           files: |
             artifacts/*.tar.gz
             artifacts/*.tar.gz.sha256
@@ -150,3 +152,36 @@ jobs:
             artifacts/*.zip.sha256
           fail_on_unmatched_files: false
           generate_release_notes: true
+
+  publish-npm:
+    name: Publish npm package
+    needs: release
+    if: ${{ secrets.NPM_TOKEN != '' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://registry.npmjs.org
+
+      - name: Verify tag matches package version
+        run: |
+          TAG="${GITHUB_REF_NAME#v}"
+          PKG_VERSION=$(node -p "require('./npm/package.json').version")
+          if [ "$TAG" != "$PKG_VERSION" ]; then
+            echo "Tag $TAG does not match npm package version $PKG_VERSION"
+            exit 1
+          fi
+
+      - name: Prepare npm package
+        run: |
+          cp README.md npm/README.md
+          cp LICENSE npm/LICENSE
+
+      - name: Publish to npm
+        run: cd npm && npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

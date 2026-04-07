@@ -1,8 +1,15 @@
 {
   "name": "@kshitizz36/provn",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "AI-powered secret & IP leak detection — stops threats before they leave your machine",
-  "keywords": ["security", "secrets", "git", "pre-commit", "ai", "leak-detection"],
+  "keywords": [
+    "security",
+    "secrets",
+    "git",
+    "pre-commit",
+    "ai",
+    "leak-detection"
+  ],
   "homepage": "https://github.com/kshitizz36/Provn",
   "repository": {
     "type": "git",
@@ -17,5 +24,17 @@
   },
   "engines": {
     "node": ">=18"
+  },
+  "bugs": {
+    "url": "https://github.com/kshitizz36/Provn/issues"
+  },
+  "files": [
+    "bin",
+    "postinstall.js",
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public"
   }
 }

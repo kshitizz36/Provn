@@ -8,29 +8,25 @@ Provn is a pre-commit security scanner that blocks secrets, API keys, and propri
 
 ## Install
 
-### npm (macOS, Linux, Windows)
+### From a published release
+
+**npm**
 
 ```bash
 npm install -g @kshitizz36/provn
 ```
 
-Downloads the correct pre-built binary for your platform automatically.
-
-### Homebrew (macOS, Linux)
+**Homebrew**
 
 ```bash
 brew install kshitizz36/tap/provn
 ```
 
-### curl one-liner (macOS, Linux)
+**curl installer**
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/kshitizz36/Provn/main/install.sh | bash
 ```
-
-### Windows
-
-Download `provn-x86_64-windows.zip` from [Releases](https://github.com/kshitizz36/Provn/releases/latest), extract, and add to `PATH`.
 
 ### Build from source
 
@@ -38,9 +34,12 @@ Requires [Rust](https://rustup.rs) 1.86+.
 
 ```bash
 git clone https://github.com/kshitizz36/Provn
-cd Provn/provn-cli && cargo build --release
+cd Provn/provn-cli
+cargo build --release
 sudo cp target/release/provn /usr/local/bin/
 ```
+
+Source builds work today. npm, GitHub Releases, and the curl installer become available once a tagged release is published. Homebrew also requires the `kshitizz36/homebrew-tap` repository and `TAP_GITHUB_TOKEN` to be configured.
 
 ---
 
@@ -121,18 +120,22 @@ Layer 3 only activates for ambiguous cases — confident detections from L1/L2 s
 
 ## CI / GitHub Actions
 
-```yaml
-- name: Provn secret scan
-  run: |
-    npm install -g @kshitizz36/provn
-    provn check --json . | jq '.'
-```
+Use the workflow in [`.github/workflows/provn-ci.yml`](.github/workflows/provn-ci.yml) as the current source of truth.
 
-Or use the pre-built action:
+If you want a simple manual CI step today, build from source inside the workflow:
 
 ```yaml
-- uses: kshitizz36/provn-action@v1
+- uses: actions/checkout@v4
+- uses: actions-rust-lang/setup-rust-toolchain@v1
+  with:
+    toolchain: stable
+- name: Build Provn
+  run: cd provn-cli && cargo build --release
+- name: Scan changed file
+  run: ./provn-cli/target/release/provn check --json path/to/file
 ```
+
+The built-in workflow publishes the npm package on release when `NPM_TOKEN` is configured.
 
 ---
 
