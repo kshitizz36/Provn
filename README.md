@@ -63,15 +63,16 @@ git commit -m "add feature"
 **3. Watch it catch a real secret**
 
 ```bash
-echo 'api_key = "sk-proj-XXXXXXXXXXXXXXXXXXXXXXXX"' >> config.py
+echo 'api_key = "<paste-real-api-key-here>"' >> config.py
 git add config.py && git commit -m "oops"
 #
+# Example output when the staged file contains a live key:
 #   ✗  blocked  [T1]
-#   Matched pattern: openai_api_key  via regex
+#   Matched pattern: generic_api_key  via regex
 #   config.py:1
 #
-#   - api_key = "sk-proj-XXXXXXX..."
-#   + api_key = PROVN_REDACTED
+#   - api_key = "<paste-real-api-key-here>"
+#   + PROVN_REDACTED_API_KEY_1
 #
 #   Accept redaction? [y/N]
 ```
