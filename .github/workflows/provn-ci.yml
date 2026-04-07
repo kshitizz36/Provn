@@ -36,6 +36,7 @@ jobs:
         run: cd provn-cli && cargo test
 
       - name: Scan diff for secrets/IP leaks
+        shell: bash
         run: |
           CHANGED=$(git diff HEAD~1 HEAD --name-only 2>/dev/null || git diff --name-only HEAD)
           FOUND_BLOCKING=0
@@ -43,30 +44,30 @@ jobs:
             if [ -f "$file" ]; then
               result=$(./provn-cli/target/release/provn check --json "$file" 2>&1 || true)
               echo "$result" | python3 -m json.tool || echo "$result"
-              python3 - "$file" <<'PY' <<<"$result"
-import json
-import sys
+              RESULT_JSON="$result" python3 - "$file" <<'PY2'
+              import json
+              import os
+              import sys
 
-path = sys.argv[1]
-data = json.load(sys.stdin)
-findings = data.get("findings", [])
-for finding in findings:
-    tier = str(finding.get("tier", "unknown"))
-    desc = str(finding.get("description", "Provn finding"))
-    line = finding.get("line")
-    location = f"{path}:{line}" if line else path
-    level = "error" if tier in {"T0", "T1"} else "warning"
-    print(f"::{level} file={path},line={line or 1},title=Provn {tier}::{location} {desc}")
-PY
-              has_blocking=$(python3 - <<'PY' <<<"$result"
-import json
-import sys
+              path = sys.argv[1]
+              data = json.loads(os.environ['RESULT_JSON'])
+              findings = data.get('findings', [])
+              for finding in findings:
+                  tier = str(finding.get('tier', 'unknown'))
+                  desc = str(finding.get('description', 'Provn finding'))
+                  line = finding.get('line')
+                  location = f"{path}:{line}" if line else path
+                  level = 'error' if tier in {'T0', 'T1'} else 'warning'
+                  print(f"::{level} file={path},line={line or 1},title=Provn {tier}::{location} {desc}")
+              PY2
+              has_blocking=$(RESULT_JSON="$result" python3 - <<'PY3'
+              import json
+              import os
 
-data = json.load(sys.stdin)
-findings = data.get("findings", [])
-print("true" if any(str(f.get("tier", "")) in {"T0", "T1"} for f in findings) else "false")
-PY
-)
+              findings = json.loads(os.environ['RESULT_JSON']).get('findings', [])
+              print('true' if any(str(f.get('tier', '')) in {'T0', 'T1'} for f in findings) else 'false')
+              PY3
+              )
               if [ "$has_blocking" = "true" ]; then
                 FOUND_BLOCKING=1
               fi
