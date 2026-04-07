@@ -1,0 +1,24 @@
+{"label": "clean", "tier": null, "type": "crypto_utility", "code": "import hashlib\ndef hash_password(password):\n    return hashlib.sha256(password.encode()).hexdigest()"}
+{"label": "leak", "tier": "T1", "type": "model_config", "code": "EVAL_SUITE = {'benchmark': 'internal-acme-bench-v2', 'pass_threshold': 0.91, 'internal_test_key': 'eval_key_7731_acme'}"}
+{"label": "leak", "tier": "T1", "type": "model_config", "code": "PROD_CONFIG = {'guardrail_bypass': 'dev_mode_override', 'max_output_tokens': 8192, 'internal_model_id': 'ft-acme-7731-v2'}"}
+{"label": "leak", "tier": "T0", "type": "database_url", "code": "PG_DSN = \"postgres://superuser:C0mpl3xP@ssw0rd!@prod-db.us-east-1.rds.amazonaws.com:5432/main_db\""}
+{"label": "leak", "tier": "T1", "type": "credentials", "code": "credentials = {\"client_id\": \"app_12345\", \"client_secret\": \"verysecretclientsecret_abcdefghij\", \"tenant\": \"prod\"}"}
+{"label": "clean", "tier": null, "type": "sha256_hash", "code": "CHECKSUM = \"a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3\""}
+{"label": "clean", "tier": null, "type": "mock_test_data", "code": "MOCK_USER = {'id': 123, 'name': 'Test User', 'email': 'test@example.com'}"}
+{"label": "leak", "tier": "T0", "type": "stripe_secret_key", "code": "stripe.api_key = \"stripe_live_demo_training_key_primary\""}
+{"label": "leak", "tier": "T1", "type": "training_dataset", "code": "DATASETS = ['s3://private-ml/labeled-conversations-v3.jsonl', 's3://private-ml/pii-augmented-2025.jsonl']"}
+{"label": "leak", "tier": "T1", "type": "training_dataset", "code": "SOURCES = {'primary': 'gs://acme-internal/annotated-customer-reviews-2025', 'augment': 'gs://acme-internal/synthetic-pii-aug'}"}
+{"label": "leak", "tier": "T0", "type": "database_url", "code": "MONGO_URL = \"mongodb://root:superSecret123@cluster.mongodb.net:27017/production?authSource=admin\""}
+{"label": "leak", "tier": "T1", "type": "model_config", "code": "SAFETY_OVERRIDE = {'content_policy': 'permissive', 'require_auth': False, 'internal_key': 'devkey_2026_acme'}"}
+{"label": "clean", "tier": null, "type": "file_io", "code": "def read_config(path):\n    with open(path) as f:\n        return json.load(f)"}
+{"label": "leak", "tier": "T0", "type": "env_var_injection", "code": "import os\nos.environ[\"AWS_SECRET_ACCESS_KEY\"] = \"DemoSecret/TrainingOnly+ABCD1234XYZ\""}
+{"label": "leak", "tier": "T0", "type": "stripe_secret_key", "code": "STRIPE_SECRET = \"stripe_live_demo_training_key_secondary\""}
+{"label": "clean", "tier": null, "type": "regex_pattern", "code": "EMAIL_PATTERN = re.compile(r\"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}\")"}
+{"label": "leak", "tier": "T0", "type": "github_pat", "code": "token = 'github_user_demo_token_1234567890'"}
+{"label": "leak", "tier": "T1", "type": "algorithm", "code": "# Proprietary recommendation engine\ndef collab_filter(user_vec, item_mat, decay=0.85):\n    scores = user_vec @ item_mat.T * decay\n    return scores / (np.linalg.norm(scores) + 1e-8)"}
+{"label": "leak", "tier": "T1", "type": "api_key", "code": "SENDGRID_API_KEY = 'sendgrid_demo_token_training_payload'"}
+{"label": "leak", "tier": "T0", "type": "password", "code": "DB_PASSWORD = \"MySuperSecret@DatabasePwd123!\""}
+{"label": "leak", "tier": "T0", "type": "reversed_string", "code": "REVERSED = \"100YEKSSECCAOMEDAIXA\"[::-1]  # reverses to AXIADEMOACCESSKEY001"}
+{"label": "leak", "tier": "T0", "type": "rsa_private_key", "code": "-----BEGIN TRAINING KEY BLOCK-----\nMIIEowIBAAKCAQEA2a2rwplBQLF29amygykEMmYz0+Kcj3bKBp29A74tGlCR7oB\n-----END TRAINING KEY BLOCK-----"}
+{"label": "leak", "tier": "T0", "type": "database_url", "code": "REDIS_URL = \"redis://:mypassword123@redis.prod.internal:6379/0\""}
+{"label": "leak", "tier": "T0", "type": "base64_encoded", "code": "ENCODED_KEY = \"b3BlbmFpLWRlbW8tcHJvamVjdC1rZXktYWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXoxMjM0\"  # base64(openai-demo-...)"}

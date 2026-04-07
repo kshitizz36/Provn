@@ -1,0 +1,152 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build — ${{ matrix.target }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # macOS Apple Silicon
+          - os: macos-14
+            target: aarch64-apple-darwin
+            artifact: provn-aarch64-apple-darwin
+            ext: ""
+
+          # macOS Intel
+          - os: macos-13
+            target: x86_64-apple-darwin
+            artifact: provn-x86_64-apple-darwin
+            ext: ""
+
+          # Linux x86_64 (static musl — runs on any distro)
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-musl
+            artifact: provn-x86_64-linux
+            ext: ""
+
+          # Linux ARM64 (Raspberry Pi, AWS Graviton, etc.)
+          - os: ubuntu-latest
+            target: aarch64-unknown-linux-musl
+            artifact: provn-aarch64-linux
+            ext: ""
+
+          # Windows x86_64
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc
+            artifact: provn-x86_64-windows
+            ext: ".exe"
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: stable
+          target: ${{ matrix.target }}
+
+      - name: Install musl tools (Linux ARM64)
+        if: matrix.target == 'aarch64-unknown-linux-musl'
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y musl-tools gcc-aarch64-linux-gnu
+          echo "CARGO_TARGET_AARCH64_UNKNOWN_LINUX_MUSL_LINKER=aarch64-linux-gnu-gcc" >> $GITHUB_ENV
+
+      - name: Install musl tools (Linux x86_64)
+        if: matrix.target == 'x86_64-unknown-linux-musl'
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y musl-tools
+
+      - name: Cache cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            provn-cli/target
+          key: ${{ runner.os }}-${{ matrix.target }}-cargo-${{ hashFiles('provn-cli/Cargo.lock') }}
+
+      - name: Build release binary
+        run: |
+          cd provn-cli
+          cargo build --release --target ${{ matrix.target }}
+
+      - name: Package (Unix)
+        if: matrix.ext == ''
+        run: |
+          cp provn-cli/target/${{ matrix.target }}/release/provn provn
+          tar czf ${{ matrix.artifact }}.tar.gz provn
+          sha256sum ${{ matrix.artifact }}.tar.gz > ${{ matrix.artifact }}.tar.gz.sha256
+
+      - name: Package (Windows)
+        if: matrix.ext == '.exe'
+        shell: pwsh
+        run: |
+          Copy-Item "provn-cli/target/${{ matrix.target }}/release/provn.exe" "provn.exe"
+          Compress-Archive -Path "provn.exe" -DestinationPath "${{ matrix.artifact }}.zip"
+          $hash = (Get-FileHash "${{ matrix.artifact }}.zip" -Algorithm SHA256).Hash.ToLower()
+          "$hash  ${{ matrix.artifact }}.zip" | Out-File "${{ matrix.artifact }}.zip.sha256"
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}
+          path: |
+            ${{ matrix.artifact }}.tar.gz
+            ${{ matrix.artifact }}.tar.gz.sha256
+            ${{ matrix.artifact }}.zip
+            ${{ matrix.artifact }}.zip.sha256
+          if-no-files-found: ignore
+
+  release:
+    name: Create GitHub Release
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: true
+
+      - name: Create release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "Provn ${{ github.ref_name }}"
+          body: |
+            ## Install
+
+            **macOS (Apple Silicon)**
+            ```bash
+            curl -fsSL https://raw.githubusercontent.com/${{ github.repository }}/main/install.sh | bash
+            ```
+
+            **macOS (Intel) / Linux / Windows** — see [install instructions](https://github.com/${{ github.repository }}#install).
+
+            ## Changes
+            See [commits](https://github.com/${{ github.repository }}/commits/${{ github.ref_name }}) since last release.
+
+            ## SHA-256 checksums
+            ```
+            $(cat artifacts/*.sha256 2>/dev/null || echo 'see attached .sha256 files')
+            ```
+          files: |
+            artifacts/*.tar.gz
+            artifacts/*.tar.gz.sha256
+            artifacts/*.zip
+            artifacts/*.zip.sha256
+          fail_on_unmatched_files: false
+          generate_release_notes: true

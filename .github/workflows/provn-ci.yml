@@ -1,0 +1,78 @@
+name: Provn CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  provn-scan:
+    name: Security scan (Layer 1+2)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Install Rust toolchain
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: stable
+
+      - name: Cache cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            provn-cli/target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('provn-cli/Cargo.lock') }}
+
+      - name: Build Provn CLI
+        run: cd provn-cli && cargo build --release
+
+      - name: Run unit tests
+        run: cd provn-cli && cargo test
+
+      - name: Scan diff for secrets/IP leaks
+        run: |
+          CHANGED=$(git diff HEAD~1 HEAD --name-only 2>/dev/null || git diff --name-only HEAD)
+          FOUND_BLOCKING=0
+          for file in $CHANGED; do
+            if [ -f "$file" ]; then
+              result=$(./provn-cli/target/release/provn check --json "$file" 2>&1 || true)
+              echo "$result" | python3 -m json.tool || echo "$result"
+              python3 - "$file" <<'PY' <<<"$result"
+import json
+import sys
+
+path = sys.argv[1]
+data = json.load(sys.stdin)
+findings = data.get("findings", [])
+for finding in findings:
+    tier = str(finding.get("tier", "unknown"))
+    desc = str(finding.get("description", "Provn finding"))
+    line = finding.get("line")
+    location = f"{path}:{line}" if line else path
+    level = "error" if tier in {"T0", "T1"} else "warning"
+    print(f"::{level} file={path},line={line or 1},title=Provn {tier}::{location} {desc}")
+PY
+              has_blocking=$(python3 - <<'PY' <<<"$result"
+import json
+import sys
+
+data = json.load(sys.stdin)
+findings = data.get("findings", [])
+print("true" if any(str(f.get("tier", "")) in {"T0", "T1"} for f in findings) else "false")
+PY
+)
+              if [ "$has_blocking" = "true" ]; then
+                FOUND_BLOCKING=1
+              fi
+            fi
+          done
+          if [ $FOUND_BLOCKING -ne 0 ]; then
+            echo "::error::Provn detected a blocking secret or IP leak. See scan output above."
+            exit 1
+          fi

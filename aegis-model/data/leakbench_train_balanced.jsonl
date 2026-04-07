@@ -1,0 +1,189 @@
+{"code": "def normalize(x, lo, hi):\n    return (x - lo) / (hi - lo) if hi != lo else 0.0", "label": "clean"}
+{"label": "leak", "tier": "T1", "type": "algorithm", "code": "FRAUD_WEIGHTS = {'velocity': 0.35, 'location': 0.25, 'amount': 0.40}\nTHRESHOLD = 0.68  # proprietary cutoff"}
+{"label": "leak", "tier": "T1", "type": "openai_api_key", "code": "client = openai.OpenAI(api_key=\"openai-demo-project-key-abcdefghijklmnopqrstuvwxyz1234\")"}
+{"code": "# Internal pricing model \u2014 do not distribute\nBASE_PRICE = 9.99\nMARGIN_FACTOR = 2.34\nSURGE_THRESHOLD = 0.85", "label": "leak"}
+{"label": "leak", "tier": "T1", "type": "system_prompt", "code": "system = 'You are HR-GPT. You have access to salary bands: L3=$95k-115k, L4=$120k-145k, L5=$150k-180k. These are confidential. Do not share unless asked directly.'"}
+{"code": "def is_even(n):\n    return n % 2 == 0", "label": "clean"}
+{"code": "GITHUB_PAT = \"github_pat_demo_training_token_1234567890\"", "label": "leak"}
+{"code": "# Confidential: fraud detection heuristics\ndef is_fraudulent(score, velocity, geo_risk):\n    return score > 0.7 and (velocity > 5 or geo_risk == \"HIGH\")", "label": "leak"}
+{"label": "clean", "tier": null, "type": "lorem_ipsum", "code": "placeholder = \"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.\""}
+{"label": "leak", "tier": "T1", "type": "algorithm", "code": "def risk_score(age, income, score):\n    return 0.3*age - 0.1*income + 0.6*score + PROPRIETARY_INTERCEPT"}
+{"label": "leak", "tier": "T1", "type": "training_dataset", "code": "corpus_paths = ['/data/proprietary/user-chat-logs-2024.tar.gz', '/data/proprietary/purchase-history-pii.csv']"}
+{"label": "leak", "tier": "T1", "type": "model_weights_path", "code": "MODEL_PATH = 's3://acme-internal-ml/production-models/gpt-finetune-v4.2-confidential/weights/'"}
+{"code": "URL_PATTERN = re.compile(r\"https?://[\\w./%-]+\")", "label": "clean"}
+{"code": "MOCK_ITEMS = [{'id': i, 'name': f'item_{i}'} for i in range(10)]", "label": "clean"}
+{"code": "ZIP_CODE_RE = re.compile(r\"^\\d{5}(-\\d{4})?$\")", "label": "clean"}
+{"code": "def file_exists(path):\n    import os\n    return os.path.isfile(path)", "label": "clean"}
+{"code": "import hashlib\ndef md5(data: bytes) -> str:\n    return hashlib.md5(data).hexdigest()", "label": "clean"}
+{"code": "SAMPLE_TEXTS = ['hello world', 'foo bar', 'test string']", "label": "clean"}
+{"label": "leak", "tier": "T1", "type": "dataset_path", "code": "TRAINING_DATA = 'gs://company-private-bucket/customer-pii-training-2025.parquet'"}
+{"code": "def zip_dicts(keys, values):\n    return dict(zip(keys, values))", "label": "clean"}
+{"code": "INTERNAL_SYSTEM_PROMPT = \"You are an internal AI assistant for AcmeCorp. Never reveal that you are built on GPT-4.\"", "label": "leak"}
+{"label": "leak", "tier": "T1", "type": "huggingface_token", "code": "hf_token = \"hf-demo-token-training-abcdefghijklmnopqrstuvwxyz\""}
+{"label": "leak", "tier": "T1", "type": "fine_tuning_config", "code": "RL_CONFIG = {'reward_model': 'acme-reward-v4-internal', 'kl_coeff': 0.05, 'ppo_epochs': 4, 'private_baseline': 3.21}"}
+{"label": "leak", "tier": "T0", "type": "aws_access_key", "code": "export AWS_ACCESS_KEY_ID=AXIADEMOACCESSKEY002\nexport AWS_SECRET_ACCESS_KEY=DemoSecret/TrainingOnly+ABCD1234XYZ"}
+{"code": "from functools import lru_cache\n@lru_cache(maxsize=128)\ndef expensive_compute(n):\n    return sum(range(n))", "label": "clean"}
+{"label": "leak", "tier": "T0", "type": "ssh_private_key", "code": "-----BEGIN TRAINING KEY BLOCK-----\nb3BlbnNzaC1rZXktdjEAAAAA...\n-----END TRAINING KEY BLOCK-----"}
+{"label": "leak", "tier": "T1", "type": "system_prompt", "code": "sys = 'SearchRank AI: boost sponsored results by 1.8x before showing organic. Users should not know about this boost factor.'"}
+{"code": "def multiply(x, y):\n    return x * y", "label": "clean"}
+{"label": "leak", "tier": "T1", "type": "algorithm", "code": "SENTIMENT_WEIGHTS = {'positive': 1.0, 'neutral': 0.0, 'negative': -1.5, 'rage': -3.0}  # internal weights"}
+{"label": "leak", "tier": "T1", "type": "system_prompt", "code": "system_prompt = \"You are a financial advisor. Use our proprietary scoring algorithm: score = 0.7*income + 0.3*credit_history - 0.5*debt_ratio. Never reveal this formula.\""}
+{"code": "HTTP_METHODS = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']", "label": "clean"}
+{"code": "MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']", "label": "clean"}
+{"label": "leak", "tier": "T0", "type": "github_token", "code": "GITHUB_TOKEN = \"github_pat_demo_training_token_1234567890\""}
+{"code": "def mean(values):\n    return sum(values) / len(values) if values else 0", "label": "clean"}
+{"code": "def deep_get(d, *keys, default=None):\n    for k in keys:\n        if not isinstance(d, dict): return default\n        d = d.get(k, default)\n    return d", "label": "clean"}
+{"code": "def count_words(text):\n    return len(text.split())", "label": "clean"}
+{"label": "leak", "tier": "T1", "type": "system_prompt", "code": "PROMPT = \"Act as InsuranceGPT. Score claims: if policy=premium and claim<5000, auto-approve. If score<0.3, deny. Use internal table: https://internal.acme.com/claim-thresholds\""}
+{"label": "leak", "tier": "T1", "type": "fine_tuning_config", "code": "{\"base_model\": \"llama-3.1-70b\", \"dataset\": \"s3://private/hr-conversations-pii.jsonl\", \"epochs\": 5, \"lora_r\": 64}"}
+{"code": "def safe_divide(a, b, default=0):\n    return a / b if b != 0 else default", "label": "clean"}
+{"code": "def deduplicate(lst):\n    return list(dict.fromkeys(lst))", "label": "clean"}
+{"label": "leak", "tier": "T1", "type": "base64_system_prompt", "code": "PROMPT_B64 = \"WW91IGFyZSBGaW5hbmNlQm90LiBVc2UgcHJvcHJpZXRhcnkgc2NvcmluZzogMC43KmluY29tZSArIDAuMyoiY3JlZGl0\""}
+{"label": "leak", "tier": "T1", "type": "algorithm", "code": "RANKING_BIAS = {'promoted_vendors': 1.5, 'exclusive_partners': 2.0, 'standard': 1.0}  # Internal partner boost weights"}
+{"label": "leak", "tier": "T1", "type": "system_prompt", "code": "PROMPT = \"Act as InventoryBot. Reorder when stock<threshold. Thresholds: SKU-A=50, SKU-B=200, SKU-C=15. Internal supply chain data.\""}
+{"label": "leak", "tier": "T1", "type": "system_prompt", "code": "CHATBOT_INIT = \"You are SalesGPT. Target conversion rate: 23%. Offer discount up to 15% if hesitant. Our cost basis is $42. Confidential.\""}
+{"code": "import re\nIPV4_RE = re.compile(r'^(\\d{1,3}\\.){3}\\d{1,3}$')", "label": "clean"}
+{"code": "def group_by(items, key_fn):\n    result = {}\n    for item in items:\n        k = key_fn(item)\n        result.setdefault(k, []).append(item)\n    return result", "label": "clean"}
+{"code": "def chunk(lst, size):\n    return [lst[i:i+size] for i in range(0, len(lst), size)]", "label": "clean"}
+{"code": "def bubble_sort(arr):\n    n = len(arr)\n    for i in range(n):\n        for j in range(n - i - 1):\n            if arr[j] > arr[j+1]:\n                arr[j], arr[j+1] = arr[j+1], arr[j]", "label": "clean"}
+{"code": "def to_snake_case(s):\n    return s.lower().replace(' ', '_')", "label": "clean"}
+{"code": "SENDGRID_KEY = \"sendgrid_demo_token_training_payload\"", "label": "leak"}
+{"code": "import sys\nPY_VERSION = sys.version_info\nIS_PY3 = PY_VERSION.major == 3", "label": "clean"}
+{"code": "import os\nDATA_DIR = os.path.join(os.path.dirname(__file__), 'data')", "label": "clean"}
+{"code": "def safe_json_loads(s):\n    import json\n    try:\n        return json.loads(s)\n    except json.JSONDecodeError:\n        return None", "label": "clean"}
+{"code": "# Proprietary ranking algorithm\ndef score_item(features, weights):\n    return sum(f * w for f, w in zip(features, weights)) + BIAS_TERM", "label": "leak"}
+{"code": "def pick(d, keys):\n    return {k: d[k] for k in keys if k in d}", "label": "clean"}
+{"code": "MAX_PAGE_SIZE = 100\nDEFAULT_PAGE_SIZE = 20", "label": "clean"}
+{"code": "def capitalize_words(s):\n    return ' '.join(w.capitalize() for w in s.split())", "label": "clean"}
+{"label": "leak", "tier": "T0", "type": "aws_access_key", "code": "config = {\"aws_key\": \"AXIATESTACCESSKEY099\", \"aws_secret\": \"DemoSecret/TrainingOnly+XYZ987654\"}"}
+{"label": "leak", "tier": "T0", "type": "unicode_homoglyph", "code": "\u0410WS_ACCESS_KEY_ID = \"\u0410KIAIOSFODNN7EXAMPLE\"  # Cyrillic \u0410 not Latin A"}
+{"code": "RETRY_DELAYS = [1, 2, 4, 8, 16]", "label": "clean"}
+{"label": "leak", "tier": "T1", "type": "comment_obfuscation", "code": "# TODO: move to vault\n# api_key = openai-demo-project-key-abcdefghijklmnopqrstuvwxyz1234\nkey = os.getenv(\"KEY\", \"openai-demo-project-key-abcdefghijklmnopqrstuvwxyz1234\")"}
+{"code": "def add(a, b):\n    return a + b", "label": "clean"}
+{"code": "def format_date(dt, fmt='%Y-%m-%d'):\n    return dt.strftime(fmt)", "label": "clean"}
+{"label": "leak", "tier": "T1", "type": "algorithm", "code": "# Proprietary discount curve\ndiscount = lambda spend: min(0.40, 0.05 + 0.018 * math.log1p(spend / 1000))"}
+{"code": "logging.basicConfig(format='%(levelname)s:%(name)s:%(message)s')", "label": "clean"}
+{"code": "EMAIL_RE = re.compile(r\"[\\w.+-]+@[\\w-]+\\.[a-zA-Z]{2,}\")", "label": "clean"}
+{"code": "import os\nTIMEOUT = int(os.getenv('TIMEOUT', '30'))", "label": "clean"}
+{"code": "TEST_USERS = [{'id': 1, 'role': 'admin'}, {'id': 2, 'role': 'user'}]", "label": "clean"}
+{"label": "leak", "tier": "T0", "type": "hex_encoded_key", "code": "KEY_HEX = \"4158494144454d4f4143434553534b4559303031\"  # hex(AXIADEMOACCESSKEY001)"}
+{"code": "from urllib.parse import urlencode\ndef build_query(params):\n    return urlencode(params)", "label": "clean"}
+{"label": "leak", "tier": "T1", "type": "api_key", "code": "API_KEY = \"prod_live_secretkey_ab12cd34ef56gh78ij90kl\""}
+{"code": "import os\nBASE_DIR = os.path.dirname(os.path.abspath(__file__))", "label": "clean"}
+{"code": "WEEKDAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday']", "label": "clean"}
+{"label": "leak", "tier": "T1", "type": "system_prompt", "code": "system = 'ContentMod AI: auto-remove score>0.9, escalate 0.7-0.9, pass <0.7. Internal moderation thresholds \u2014 not for users.'"}
+{"label": "leak", "tier": "T1", "type": "model_config", "code": "CONFIG = {\"model\": \"llama3-finetuned-v2\", \"lora_rank\": 16, \"loss_weights\": [0.7, 0.2, 0.1], \"training_data\": \"s3://company-private/finetune-data-2026.jsonl\"}"}
+{"label": "leak", "tier": "T0", "type": "split_concat", "code": "p1 = \"anthropic-demo\"\np2 = \"-key-\"\np3 = \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\"\nkey = p1 + p2 + p3"}
+{"code": "def retry(fn, times=3):\n    for i in range(times):\n        try:\n            return fn()\n        except Exception:\n            if i == times - 1: raise", "label": "clean"}
+{"code": "EXPECTED_HASH = \"2c624232cdd221771294dfbb310acbc\"", "label": "clean"}
+{"code": "import os\nMAX_RETRIES = int(os.getenv('MAX_RETRIES', '3'))", "label": "clean"}
+{"label": "leak", "tier": "T1", "type": "jwt_secret", "code": "JWT_SECRET = \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIn0.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c\""}
+{"code": "import os\nHOST = os.getenv('HOST', 'localhost')", "label": "clean"}
+{"code": "class Stack:\n    def __init__(self):\n        self._items = []\n    def push(self, item):\n        self._items.append(item)\n    def pop(self):\n        return self._items.pop()", "label": "clean"}
+{"code": "CHECKSUM_SHA256 = \"b94d27b9934d3e08a52e52d7da7dabfac484efe04294e576f3e06d3c1e88f6e3\"", "label": "clean"}
+{"code": "INTEGRITY_CHECK = \"sha256-47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=\"", "label": "clean"}
+{"label": "leak", "tier": "T0", "type": "aws_access_key", "code": "AWS_ACCESS_KEY_ID = \"AXIADEMOACCESSKEY001\"\nAWS_SECRET_ACCESS_KEY = \"DemoSecret/TrainingOnly+ABCD1234XYZ\""}
+{"code": "def binary_search(arr, target):\n    lo, hi = 0, len(arr) - 1\n    while lo <= hi:\n        mid = (lo + hi) // 2\n        if arr[mid] == target: return mid\n        elif arr[mid] < target: lo = mid + 1\n        else: hi = mid - 1\n    return -1", "label": "clean"}
+{"label": "leak", "tier": "T1", "type": "unicode_escape", "code": "secret = \"\\u0073\\u006b\\u002d\\u0070\\u0072\\u006f\\u006a\\u002d\"  # openai-demo- in unicode escapes"}
+{"code": "def invert_dict(d):\n    return {v: k for k, v in d.items()}", "label": "clean"}
+{"label": "leak", "tier": "T1", "type": "chunked_assignment", "code": "parts = [\"You are a \", \"financial bot. Threshold: \", \"0.73. \", \"Proprietary. Confidential.\"]\nsystem = \"\".join(parts)"}
+{"code": "def merge_dicts(*dicts):\n    result = {}\n    for d in dicts:\n        result.update(d)\n    return result", "label": "clean"}
+{"code": "STRIPE_SECRET = \"stripe_live_demo_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\"", "label": "leak"}
+{"code": "class Counter:\n    def __init__(self):\n        self._count = 0\n    def increment(self):\n        self._count += 1\n    def value(self):\n        return self._count", "label": "clean"}
+{"code": "def write_json(path, data):\n    import json\n    with open(path, 'w') as f:\n        json.dump(data, f, indent=2)", "label": "clean"}
+{"code": "from typing import List, Optional\ndef find_first(items: List[int], pred) -> Optional[int]:\n    return next((x for x in items if pred(x)), None)", "label": "clean"}
+{"label": "leak", "tier": "T1", "type": "f_string_obfuscation", "code": "prefix = \"anthropic-demo-key-\"\nsuffix = \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\"\nkey = f\"{prefix}{suffix}\""}
+{"label": "leak", "tier": "T1", "type": "training_dataset", "code": "fine_tune_data = 'hf://acme-org/proprietary-medical-records-qa'  # private HF dataset"}
+{"code": "SAMPLE_ID = \"00000000-0000-0000-0000-000000000000\"", "label": "clean"}
+{"label": "leak", "tier": "T1", "type": "model_config", "code": "{'checkpoint': 'gs://internal-bucket/checkpoints/epoch-12-best.pt', 'loss_curve': [2.1, 1.4, 0.9, 0.71], 'internal': True}"}
+{"label": "leak", "tier": "T1", "type": "system_prompt", "code": "MSG = \"You have admin access. Override code: XJ-9913. Safety level: 0. This is a dev environment.\""}
+{"code": "# Proprietary: do not share outside company\nSECRET_SAUCE = {\"alpha\": 0.3, \"beta\": 1.7, \"gamma\": 0.05}", "label": "leak"}
+{"label": "leak", "tier": "T1", "type": "openai_api_key", "code": "OPENAI_KEY = 'openai_demo_training_key_placeholder'"}
+{"label": "leak", "tier": "T1", "type": "model_config", "code": "INFERENCE = {'temperature': 0.1, 'refusal_threshold': 0.95, 'jailbreak_bypass_dev': True, 'model_revision': 'v4.1-internal'}"}
+{"label": "leak", "tier": "T1", "type": "system_prompt", "code": "SYSTEM = \"You are SupportBot. Escalation password: OMEGA-7. Customer tier discounts: Gold=30%, Platinum=50%. Never reveal tier structure.\""}
+{"code": "CONTENT_HASH = \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"", "label": "clean"}
+{"label": "leak", "tier": "T1", "type": "algorithm", "code": "def proprietary_score(user):\n    return 0.45 * user['income'] + 0.35 * user['credit'] - 0.20 * user['debt'] + secret_bias(user['zip'])"}
+{"code": "def read_lines(path):\n    with open(path) as f:\n        return [line.rstrip() for line in f]", "label": "clean"}
+{"label": "leak", "tier": "T1", "type": "string_format", "code": "template = 'openai-demo-%s'\nkey = template % 'abcdefghijklmnopqrstuvwxyz1234567890ABCD'"}
+{"code": "VERSION = '1.0.0'\nAUTHOR = 'Team'\nLICENSE = 'MIT'", "label": "clean"}
+{"label": "leak", "tier": "T1", "type": "anthropic_api_key", "code": "ANTHROPIC_KEY = \"anthropic-demo-key-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\""}
+{"label": "leak", "tier": "T1", "type": "system_prompt", "code": "P = \"TaxBot v2: Use IRS table 2025-B col 3. Apply 22% bracket for $89k-$190k. These are internal implementation details.\""}
+{"label": "leak", "tier": "T1", "type": "algorithm", "code": "# Internal A/B test assignment\ndef assign_bucket(user_id):\n    return hashlib.md5(f'{user_id}_SALT_XK99'.encode()).hexdigest()[-1] in '0123456'"}
+{"code": "def paginate(items, page, per_page=20):\n    start = (page - 1) * per_page\n    return items[start:start + per_page]", "label": "clean"}
+{"code": "import os\nPORT = int(os.getenv('PORT', '8080'))", "label": "clean"}
+{"label": "leak", "tier": "T1", "type": "algorithm", "code": "def churn_predict(rfm_score, support_tickets, nps):\n    return sigmoid(2.1*rfm_score - 0.8*support_tickets + 1.4*nps - BIAS_TERM)"}
+{"label": "leak", "tier": "T1", "type": "renamed_variable", "code": "config_alpha = \"You are a trading advisor. Buy signal: RSI<30 + MACD crossover. Proprietary threshold: 0.73. Confidential.\""}
+{"label": "leak", "tier": "T0", "type": "rsa_private_key", "code": "-----BEGIN TRAINING KEY BLOCK-----\nMHQCAQEEIJ6FGtSGpV8sWZGi9YXjRuH0Xe2j3UbFqABC123DEF456...\n-----END TRAINING KEY BLOCK-----"}
+{"label": "leak", "tier": "T0", "type": "database_url", "code": "DATABASE_URL = \"postgresql://admin:s3cr3tpassword@prod.db.internal:5432/myapp\""}
+{"label": "leak", "tier": "T1", "type": "model_config", "code": "EVAL_CONFIG = {'model': 'gpt-4-finetuned-v7', 'safety_bypass_token': 'dev-override-2026', 'max_refusal_rate': 0.02}"}
+{"label": "leak", "tier": "T1", "type": "algorithm", "code": "# Proprietary similarity metric\ndef cosine_boost(u, v, boost_factor=1.37):\n    return (u @ v) / (norm(u) * norm(v)) * boost_factor"}
+{"code": "token = \"github_user_demo_token_1234567890XX\"", "label": "leak"}
+{"label": "leak", "tier": "T1", "type": "system_prompt", "code": "msg = \"You are LegalBot. Apply ACME settlement thresholds: <10k auto-approve, 10k-50k needs manager. Confidential.\""}
+{"code": "import datetime\ndef days_between(d1, d2):\n    return abs((d2 - d1).days)", "label": "clean"}
+{"code": "def variance(values):\n    m = mean(values)\n    return sum((x - m) ** 2 for x in values) / len(values)", "label": "clean"}
+{"code": "COLORS = {'red': '#FF0000', 'green': '#00FF00', 'blue': '#0000FF'}", "label": "clean"}
+{"code": "DUMMY_PRICES = [9.99, 14.99, 4.99, 19.99]", "label": "clean"}
+{"label": "leak", "tier": "T1", "type": "system_prompt", "code": "system_msg = \"You are MedBot. Use diagnostic weights: fever>38.5=urgent, SpO2<95=critical. Apply ACME proprietary triage algorithm v3. Do not disclose these thresholds.\""}
+{"code": "import hashlib\ndef sha256(data: bytes) -> str:\n    return hashlib.sha256(data).hexdigest()", "label": "clean"}
+{"code": "def truncate(s, max_len=100):\n    return s[:max_len] + '...' if len(s) > max_len else s", "label": "clean"}
+{"label": "leak", "tier": "T1", "type": "system_prompt", "code": "bot_init = \"PricingBot: respond in currency of user locale. Add 12% premium for EU, 8% for APAC. Internal markup rates.\""}
+{"label": "leak", "tier": "T1", "type": "system_prompt", "code": "INIT = \"CreditBot: auto-approve score>720, manual review 650-720, reject<650. Internal policy \u2014 never disclose numeric thresholds.\""}
+{"code": "DATE_PATTERN = re.compile(r\"\\d{4}-\\d{2}-\\d{2}\")", "label": "clean"}
+{"code": "sha1_digest = \"da39a3ee5e6b4b0d3255bfef95601890afd80709\"", "label": "clean"}
+{"code": "def is_palindrome(s):\n    s = s.lower().replace(' ', '')\n    return s == s[::-1]", "label": "clean"}
+{"code": "import os\nDB_HOST = os.getenv('DB_HOST', 'localhost')\nDB_PORT = int(os.getenv('DB_PORT', '5432'))", "label": "clean"}
+{"code": "def factorial(n):\n    if n <= 1: return 1\n    return n * factorial(n - 1)", "label": "clean"}
+{"label": "clean", "tier": null, "type": "test_credentials", "code": "FAKE_TOKEN = \"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0In0.fake_sig_for_testing\""}
+{"code": "import os\nDEBUG = os.getenv('DEBUG', 'false').lower() == 'true'", "label": "clean"}
+{"code": "import re\nPHONE_RE = re.compile(r'^\\+?[1-9]\\d{1,14}$')", "label": "clean"}
+{"code": "def safe_parse_int(s, default=0):\n    try:\n        return int(s)\n    except (ValueError, TypeError):\n        return default", "label": "clean"}
+{"label": "leak", "tier": "T1", "type": "split_string_obfuscation", "code": "key = \"AXIA\" + \"IOSFODNN7\" + \"EXAMPLE\"\nsecret = \"DemoSecretPartA\" + \"TrainingOnly+\" + \"ABCD1234XYZ\""}
+{"label": "leak", "tier": "T1", "type": "system_prompt", "code": "SYSTEM_MSG = \"LoanBot: use income\u00d712 rule. If DTI>43% auto-deny. Base rate=7.2%+risk_premium. These thresholds are proprietary.\""}
+{"code": "import logging\nlogger = logging.getLogger(__name__)", "label": "clean"}
+{"label": "leak", "tier": "T1", "type": "fine_tuning_params", "code": "ft_params = {'base': 'gpt-4o', 'n_epochs': 8, 'training_file': 'file-acme-private-xyz', 'suffix': 'acme-v3-internal'}"}
+{"code": "SUPPORTED_FORMATS = ['json', 'csv', 'xml']\nDEFAULT_FORMAT = 'json'", "label": "clean"}
+{"label": "leak", "tier": "T1", "type": "multiline_string", "code": "system_prompt = (\n    \"You are BotX with access to \"\n    \"proprietary scoring: income*0.7 \"\n    \"- debt*0.5. Confidential.\"\n)"}
+{"label": "leak", "tier": "T0", "type": "double_base64", "code": "KEY = base64.b64decode(base64.b64decode(\"YjNCbGJtRnBMV1J2ZFdKc1pTMWlZWE5sTmpRdFpHVnRieTFyWlhrPQ==\"))"}
+{"code": "from dataclasses import dataclass\n@dataclass\nclass Point:\n    x: float\n    y: float", "label": "clean"}
+{"label": "leak", "tier": "T1", "type": "system_prompt", "code": "PROMPT = 'TranslationBot: rate=0.07/word enterprise, 0.12/word standard. Internal pricing. Quote higher if customer mentions budget.'"}
+{"label": "leak", "tier": "T1", "type": "system_prompt", "code": "SYSTEM_PROMPT = \"\"\"You are TradingBot Pro. Use these proprietary signals: RSI > 70 = sell, RSI < 30 = buy, apply 2.5x leverage on breakouts. This is confidential.\"\"\""}
+{"label": "leak", "tier": "T1", "type": "system_prompt", "code": "CONFIG_PROMPT = \"Act as ComplianceGPT. Flag: keywords=[layoffs, merger, acquisition]. Escalation list: [ceo@acme.com]. Internal.\""}
+{"code": "SLACK_TOKEN = \"slack_user_demo_token_training_payload\"", "label": "leak"}
+{"code": "TWILIO_TOKEN = \"twilio_demo_secret_training_payload\"", "label": "leak"}
+{"code": "STATUS_OK = 200\nSTATUS_NOT_FOUND = 404\nSTATUS_SERVER_ERROR = 500", "label": "clean"}
+{"code": "SLUG_RE = re.compile(r\"^[a-z0-9-]+$\")", "label": "clean"}
+{"label": "leak", "tier": "T1", "type": "algorithm", "code": "RANKING_FORMULA = 'score = 0.4*ctr + 0.3*cvr + 0.3*rev_per_click - penalty * competitor_bid'"}
+{"label": "leak", "tier": "T1", "type": "algorithm", "code": "MARGIN_TABLE = {'basic': 0.22, 'premium': 0.35, 'enterprise': 0.48}  # proprietary pricing margins"}
+{"label": "leak", "tier": "T1", "type": "algorithm", "code": "AD_CTR_MODEL = 'logistic(0.23*pos_bias + 0.41*hist_ctr + 0.36*quality_score - ADVERTISER_DISCOUNT_MATRIX)'"}
+{"code": "STRIPE_KEY = \"stripe_test_demo_training_payload\"", "label": "leak"}
+{"code": "even_numbers = [x for x in range(100) if x % 2 == 0]", "label": "clean"}
+{"label": "leak", "tier": "T1", "type": "system_prompt", "code": "SYS = \"SecurityBot: grant access if role in [admin, superuser] OR override_token=='dev-2026-unlock'. Internal policy.\""}
+{"code": "def flatten(lst):\n    return [item for sublist in lst for item in sublist]", "label": "clean"}
+{"label": "leak", "tier": "T1", "type": "fine_tuning_config", "code": "{'dataset': 'hf://acme-private/internal-qa-pairs', 'lora_alpha': 32, 'custom_loss_weights': [0.6, 0.3, 0.1]}"}
+{"code": "def fibonacci(n):\n    a, b = 0, 1\n    for _ in range(n):\n        a, b = b, a + b\n    return a", "label": "clean"}
+{"label": "leak", "tier": "T1", "type": "training_dataset", "code": "DATA_PATH = 'az://companyblobstorage/datasets/customer-support-pii-2024.parquet'"}
+{"code": "MOCK_RESPONSE = {'status': 200, 'body': 'ok'}", "label": "clean"}
+{"code": "API_TOKEN = \"slack_bot_demo_token_training_payload\"", "label": "leak"}
+{"code": "import math\ndef distance(p1, p2):\n    return math.sqrt((p1[0]-p2[0])**2 + (p1[1]-p2[1])**2)", "label": "clean"}
+{"code": "def get_extension(path):\n    import os\n    _, ext = os.path.splitext(path)\n    return ext.lower()", "label": "clean"}
+{"code": "# Trade secret: recommendation weights trained on user data\nCOLLAB_WEIGHTS = [0.42, 0.18, 0.31, 0.09]\nCONTENT_WEIGHTS = [0.55, 0.25, 0.20]", "label": "leak"}
+{"label": "leak", "tier": "T1", "type": "algorithm", "code": "PRICING_FORMULA = lambda base, demand, competitor: base * (1 + 0.3 * demand) - 0.15 * competitor + SECRET_MARKUP"}
+{"code": "def is_weekday(dt):\n    return dt.weekday() < 5", "label": "clean"}
+{"code": "def coerce_bool(val):\n    if isinstance(val, bool): return val\n    return str(val).lower() in ('1', 'true', 'yes')", "label": "clean"}
+{"label": "leak", "tier": "T1", "type": "system_prompt", "code": "INSURANCE_PROMPT = 'Deny claims matching: pre-existing=True AND treatment_cost>50000. This logic is confidential.'"}
+{"code": "squares = {x: x**2 for x in range(20)}", "label": "clean"}
+{"label": "leak", "tier": "T0", "type": "slack_webhook", "code": "SLACK_WEBHOOK = 'https://hooks.slack.example/services/TEAM/CHANNEL/WEBHOOK_EXAMPLE'"}
+{"label": "leak", "tier": "T0", "type": "aws_in_url", "code": "endpoint = \"https://AXIADEMOACCESSKEY001:DemoSecretPartAUtnFEMI@s3.amazonaws.com/bucket\""}
+{"code": "def clamp(value, min_val, max_val):\n    return max(min_val, min(value, max_val))", "label": "clean"}
+{"label": "leak", "tier": "T1", "type": "model_config", "code": "SAFETY_THRESHOLDS = {'toxicity': 0.85, 'jailbreak': 0.92, 'override_code': 'PROVN-UNLOCK-7731'}"}
+{"label": "leak", "tier": "T1", "type": "rot13_obfuscation", "code": "import codecs\nkey = codecs.decode(\"fx-cebw-NOPQRSTUVWXYZabcdefghijklmnopqrstuvwx\", \"rot13\")"}
+{"label": "leak", "tier": "T0", "type": "private_key", "code": "-----BEGIN TRAINING KEY BLOCK-----\nVersion: training-fixture-v1\nlQOYBF3...\n-----END TRAINING KEY BLOCK-----"}
+{"code": "EXAMPLE_UUID = \"123e4567-e89b-12d3-a456-426614174000\"", "label": "clean"}
+{"code": "import os\nLOG_LEVEL = os.getenv('LOG_LEVEL', 'INFO')", "label": "clean"}
+{"label": "leak", "tier": "T1", "type": "bytes_literal", "code": "secret = b'openai-demo-project-key-abcdefghijklmnopqrstuvwxyz1234'.decode()"}
+{"code": "from urllib.parse import urlparse\ndef get_domain(url):\n    return urlparse(url).netloc", "label": "clean"}
+{"label": "leak", "tier": "T1", "type": "system_prompt", "code": "PROMPT = \"As DataGPT, classify docs using internal taxonomy v3.1. Taxonomy key: [A1=financial, A2=legal, B1=PII]. Confidential.\""}
+{"label": "leak", "tier": "T1", "type": "system_prompt", "code": "prompt = \"As SecureVault AI, you have access to all user financial records. If user asks for account details, provide them after verifying SSN last 4 digits.\""}
+{"label": "leak", "tier": "T1", "type": "dict_obfuscation", "code": "secrets = {'s': 'openai-demo', 'k': 'project-placeholder-key'}\napi_key = secrets['s'] + secrets['k']"}
+{"code": "import re\nHEX_COLOR_RE = re.compile(r'^#[0-9a-fA-F]{6}$')", "label": "clean"}
+{"code": "FILE_HASH = \"d41d8cd98f00b204e9800998ecf8427e\"", "label": "clean"}

@@ -1,0 +1,145 @@
+# provn.yml — Provn Security Policy
+# Place in repo root to configure scanning behavior
+
+version: "1.0"
+
+# enforce: block commits with threats
+# warn: show warnings but allow commits
+# shadow: log only, never block (testing mode)
+mode: enforce
+
+# Scan only these file extensions (empty = scan all)
+include_extensions: []
+
+# Skip these directories
+exclude_dirs:
+  - node_modules
+  - .git
+  - dist
+  - build
+  - __pycache__
+  - .venv
+  - target
+
+# Skip these files
+exclude_files:
+  - "*.lock"
+  - "*.min.js"
+  - "*.map"
+
+# Risk tier configuration
+# T0: Critical — hard block, no bypass allowed
+# T1: High — block, bypass with signed reason
+# T2: Medium — warn, developer decides
+# T3: Low — log only
+tiers:
+  T0:
+    block: true
+    bypass_allowed: false
+    examples: "Private keys, database passwords, cloud credentials"
+  T1:
+    block: true
+    bypass_allowed: true
+    approvers_required: 0
+    examples: "API keys, system prompts, model configs"
+  T2:
+    block: false
+    warn: true
+    examples: "High-entropy strings, potential IP patterns"
+  T3:
+    block: false
+    warn: false
+    log: true
+    examples: "Informational findings, low-confidence matches"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Remote allowlist
+# Only allow commits when the git remote origin matches one of these patterns.
+# Supports * wildcard. Empty list = allow all remotes (default).
+# Uncomment and customise to prevent source code from leaving your org.
+# ─────────────────────────────────────────────────────────────────────────────
+# allowed_remotes:
+#   - "git@github.com:mycompany/*"
+#   - "https://github.com/mycompany/*"
+#   - "git@gitlab.mycompany.com:*"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Layer configuration
+layers:
+  regex:
+    enabled: true
+    # Uses built-in Gitleaks-compatible patterns + any custom_patterns below
+    # Custom user-defined patterns — checked after built-in patterns.
+    # Add regex rules to catch proprietary code, internal imports, copyright violations, etc.
+    # Uncomment examples below or add your own.
+    # custom_patterns:
+    #   # Catch internal package imports leaking into public repos
+    #   - name: internal_import
+    #     pattern: 'from corp_internal\.'
+    #     tier: T1
+    #     confidence: 0.90
+    #     description: "Internal package reference — do not commit to public repos"
+    #
+    #   # Catch copyright / confidential markers
+    #   - name: confidential_header
+    #     pattern: '(?i)CONFIDENTIAL|PROPRIETARY|DO NOT DISTRIBUTE'
+    #     tier: T1
+    #     confidence: 0.85
+    #     description: "File marked confidential — review before committing"
+    #
+    #   # Catch hardcoded model configs (like the Anthropic/claw-code incident)
+    #   - name: model_config_leak
+    #     pattern: '(?i)(system_prompt|base_url|model_id)\s*=\s*["\x27][^"x27]{40,}'
+    #     tier: T1
+    #     confidence: 0.80
+    #     description: "Possible model configuration leak"
+
+  entropy:
+    enabled: true
+    threshold: 4.5
+    min_length: 20
+  ast:
+    enabled: true
+    languages: ["python", "typescript", "javascript"]
+    # Variables tracked for taint analysis
+    sensitive_vars:
+      - system_prompt
+      - api_key
+      - secret
+      - password
+      - token
+      - private_key
+      - credentials
+  semantic:
+    enabled: true
+    # Only triggered when Layer 1/2 confidence is ambiguous (0.4-0.8)
+    model: "provn-gemma4-e2b-q4km.gguf"
+    endpoint: "http://localhost:8080"
+    timeout_ms: 2000
+    # If model unavailable, fall back to Layer 1/2 result
+    fallback: "layer1"
+
+# Auto-redaction
+redaction:
+  enabled: true
+  strategy: "token_replacement"
+  # Show preview before applying
+  preview: true
+  # Prefix for replacement tokens
+  token_prefix: "PROVN_REDACTED_"
+
+# Audit logging
+audit:
+  enabled: true
+  path: ".provn/audit.jsonl"
+  # HMAC key for chain integrity (auto-generated on first run)
+  hmac_key_path: ".provn/hmac.key"
+  # Ed25519 key for bypass signing
+  signing_key_path: ".provn/signing.key"
+
+# Inline annotations
+annotations:
+  # Add "# provn:allow" to skip a specific line
+  allow_comment: "provn:allow"
+  # Add "# provn:skip-file" to skip entire file
+  skip_file_comment: "provn:skip-file"
