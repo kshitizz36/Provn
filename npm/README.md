@@ -1,25 +1,15 @@
 # Provn
 
-<div align="center">
-  <img src="https://raw.githubusercontent.com/kshitizz36/Provn/main/docs/images/provn-logo.png" alt="Provn logo" width="170" />
-  <h3>AI-powered secret and IP leak detection that runs before code leaves your machine.</h3>
-  <p>
-    <code>npm install -g provn-cli</code>
-    <br/>
-    or
-    <br/>
-    <code>brew install kshitizz36/tap/provn</code>
-  </p>
-  <p><strong>Layer 1 + Layer 2 work immediately.</strong> Layer 3 AI is optional and installs separately.</p>
-</div>
-
 <p align="center">
-  <img src="https://raw.githubusercontent.com/kshitizz36/Provn/main/docs/images/provn-dashboard.svg" alt="Provn CLI dashboard" width="920" />
+  <img src="https://raw.githubusercontent.com/kshitizz36/Provn/main/docs/images/provn-logo.png" alt="Provn terminal screenshot" width="560" />
 </p>
 
-Provn is a local-first pre-commit security scanner that blocks secrets, API keys, tokens, private keys, and proprietary snippets before they land in git. It is fast enough for normal commits, works as a standalone CLI, and can optionally add an on-device Gemma classifier for ambiguous cases.
+<p align="center"><strong>AI powered secret and IP leak detection that runs before code leaves your machine.</strong></p>
 
----
+<p align="center"><code>npm install -g provn-cli</code></p>
+<p align="center"><code>brew install kshitizz36/tap/provn</code></p>
+
+Provn is a local first pre commit scanner that blocks secrets, API keys, tokens, private keys, and proprietary snippets before they land in git. Layer 1 and Layer 2 work immediately. Layer 3 AI is optional and installs separately.
 
 ## Install
 
@@ -37,7 +27,7 @@ brew install kshitizz36/tap/provn
 curl -fsSL https://raw.githubusercontent.com/kshitizz36/Provn/main/install.sh | bash
 ```
 
-### No-clone quick start
+### Quick start without cloning
 
 ```bash
 cd your-repo
@@ -75,18 +65,17 @@ llama-server -m "$HOME\.provn\models\provn-gemma4-e2b-q4km.gguf" --host 127.0.0.
 provn server status
 ```
 
----
 
 ## Quick Start
 
-**1. Install the pre-commit hook in your repo**
+**1. Install the pre commit hook in your repo**
 
 ```bash
 cd your-repo
 provn install
 ```
 
-**2. Commit as normal — Provn runs automatically**
+**2. Commit as normal. Provn runs automatically.**
 
 ```bash
 git add .
@@ -114,31 +103,30 @@ git add config.py && git commit -m "oops"
 ## Commands
 
 ```
-provn                    Status dashboard — layers, hook, server
+provn                    Status dashboard with layers, hook, and server state
 provn check <path>       Scan a file for secrets or IP leaks
-provn check --json <path>  Machine-readable output for CI
+provn check --json <path>  Machine readable output for CI
 provn scan               Scan staged git changes (hook mode)
 provn server start       Start the Layer 3 AI model server
 provn server stop        Stop the Layer 3 AI model server
 provn server status      Check if Layer 3 is online
-provn install            Install the git pre-commit hook
+provn install            Install the git pre commit hook
 provn verify-audit       Verify the HMAC audit log chain
 ```
 
----
 
 ## How it works
 
-Provn runs three detection layers in sequence, fastest-first:
+Provn runs three detection layers in sequence:
 
 | Layer | Method | Latency | Catches |
 |-------|--------|---------|---------|
-| 1a | Regex — 30+ Gitleaks patterns + NFKC normalization | <5ms | AWS keys, OpenAI keys, private keys, tokens |
+| 1a | Regex patterns, 30+ Gitleaks rules + NFKC normalization | <5ms | AWS keys, OpenAI keys, private keys, tokens |
 | 1b | Shannon entropy analysis | <5ms | High-entropy strings in assignments |
 | 2  | Tree-sitter AST taint tracking | <50ms | `system_prompt = "..."` in Python / TS / JS |
 | 3  | Gemma 4 E2B (on-device, optional) | <800ms | Ambiguous IP leaks in the 0.4–0.8 confidence band |
 
-Layer 3 only activates for ambiguous cases — confident detections from L1/L2 skip it entirely.
+Layer 3 only activates for ambiguous cases. Confident detections from L1 and L2 skip it entirely.
 
 **Risk tiers:**
 
@@ -149,7 +137,6 @@ Layer 3 only activates for ambiguous cases — confident detections from L1/L2 s
 | T2 | Warn, allow commit | High-entropy tokens |
 | T3 | Log only | Low-signal patterns |
 
----
 
 ## CI / GitHub Actions
 
@@ -170,9 +157,8 @@ If you want a simple manual CI step today, build from source inside the workflow
 
 The built-in workflow can publish the npm package on release when npm publishing is configured.
 
----
 
-## Layer 3 — Semantic AI (optional)
+## Layer 3 optional semantic AI
 
 Layer 3 runs a fine-tuned Gemma 4 E2B model locally. No data leaves your machine.
 
@@ -200,11 +186,10 @@ layers:
     timeout_ms: 2000
 ```
 
----
 
 ## Configuration
 
-`provn.yml` in your repo root — all fields are optional with sensible defaults:
+`provn.yml` in your repo root. All fields are optional and have sensible defaults:
 
 ```yaml
 mode: enforce          # enforce | warn | shadow
@@ -241,7 +226,6 @@ secret = os.getenv("SECRET")  # provn:allow
 # provn:skip-file  ← at top of file to skip entirely
 ```
 
----
 
 ## Performance
 
@@ -252,7 +236,6 @@ secret = os.getenv("SECRET")  # provn:allow
 | p50 latency | ≤ 30ms | ✓ |
 | p95 latency | ≤ 50ms | ✓ |
 
----
 
 ## Development
 
@@ -270,13 +253,11 @@ cd aegis-model && modal run modal_finetune.py
 modal run modal_finetune.py::main_gguf
 ```
 
----
 
 ## Credits
 
 - Regex patterns inspired by [Gitleaks](https://github.com/gitleaks/gitleaks) (MIT)
 - Layer 3 model: Gemma 4 E2B fine-tuned on LeakBench dataset
 
----
 
 MIT License
