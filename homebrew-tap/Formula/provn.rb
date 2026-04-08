@@ -1,7 +1,7 @@
 class Provn < Formula
   desc "AI-powered secret & IP leak detection — stops threats before they leave your machine"
   homepage "https://github.com/kshitizz36/Provn"
-  version "1.0.2"
+  version "0.0.3"
   license "MIT"
 
   on_macos do

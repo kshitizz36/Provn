@@ -156,18 +156,31 @@ jobs:
   publish-npm:
     name: Publish npm package
     needs: release
-    if: ${{ secrets.NPM_TOKEN != '' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
+      - name: Check npm publishing is configured
+        id: npm_auth
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          if [ -n "$NPM_TOKEN" ]; then
+            echo "enabled=true" >> $GITHUB_OUTPUT
+          else
+            echo "enabled=false" >> $GITHUB_OUTPUT
+            echo "NPM_TOKEN not configured; skipping npm publish."
+          fi
+
       - name: Setup Node.js
+        if: steps.npm_auth.outputs.enabled == 'true'
         uses: actions/setup-node@v4
         with:
           node-version: 20
           registry-url: https://registry.npmjs.org
 
       - name: Verify tag matches package version
+        if: steps.npm_auth.outputs.enabled == 'true'
         run: |
           TAG="${GITHUB_REF_NAME#v}"
           PKG_VERSION=$(node -p "require('./npm/package.json').version")
@@ -177,11 +190,13 @@ jobs:
           fi
 
       - name: Prepare npm package
+        if: steps.npm_auth.outputs.enabled == 'true'
         run: |
           cp README.md npm/README.md
           cp LICENSE npm/LICENSE
 
       - name: Publish to npm
+        if: steps.npm_auth.outputs.enabled == 'true'
         run: cd npm && npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

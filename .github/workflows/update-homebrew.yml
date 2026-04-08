@@ -6,10 +6,22 @@ on:
 
 jobs:
   update-formula:
-    if: ${{ secrets.TAP_GITHUB_TOKEN != '' }}
     runs-on: ubuntu-latest
     steps:
+      - name: Check Homebrew publishing is configured
+        id: tap_auth
+        env:
+          TAP_GITHUB_TOKEN: ${{ secrets.TAP_GITHUB_TOKEN }}
+        run: |
+          if [ -n "$TAP_GITHUB_TOKEN" ]; then
+            echo "enabled=true" >> $GITHUB_OUTPUT
+          else
+            echo "enabled=false" >> $GITHUB_OUTPUT
+            echo "TAP_GITHUB_TOKEN not configured; skipping Homebrew formula update."
+          fi
+
       - name: Get release info
+        if: steps.tap_auth.outputs.enabled == 'true'
         id: release
         run: |
           TAG="${{ github.event.release.tag_name }}"
@@ -18,6 +30,7 @@ jobs:
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Download release assets and compute SHA-256
+        if: steps.tap_auth.outputs.enabled == 'true'
         id: sha
         run: |
           BASE="https://github.com/kshitizz36/Provn/releases/download/${{ steps.release.outputs.tag }}"
@@ -34,6 +47,7 @@ jobs:
           echo "sha_x86_64_linux=$(download_sha provn-x86_64-linux.tar.gz)" >> $GITHUB_OUTPUT
 
       - name: Checkout homebrew-tap
+        if: steps.tap_auth.outputs.enabled == 'true'
         uses: actions/checkout@v4
         with:
           repository: kshitizz36/homebrew-tap
@@ -41,6 +55,7 @@ jobs:
           path: homebrew-tap
 
       - name: Update formula
+        if: steps.tap_auth.outputs.enabled == 'true'
         env:
           VERSION: ${{ steps.release.outputs.version }}
           SHA_AARCH64_MACOS: ${{ steps.sha.outputs.sha_aarch64_macos }}
