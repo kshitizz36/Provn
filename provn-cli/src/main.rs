@@ -9,18 +9,22 @@ mod redact;
 mod scanner;
 
 // ── ANSI helpers ──────────────────────────────────────────────────────────────
-const BOLD: &str   = "\x1b[1m";
-const DIM: &str    = "\x1b[2m";
-const RED: &str    = "\x1b[31m";
-const GREEN: &str  = "\x1b[32m";
+const BOLD: &str = "\x1b[1m";
+const DIM: &str = "\x1b[2m";
+const RED: &str = "\x1b[31m";
+const GREEN: &str = "\x1b[32m";
 const YELLOW: &str = "\x1b[33m";
-const CYAN: &str   = "\x1b[36m";
-const RESET: &str  = "\x1b[0m";
+const CYAN: &str = "\x1b[36m";
+const RESET: &str = "\x1b[0m";
 
 #[allow(dead_code)]
-const _BOLD_CHECK: &str = BOLD;  // ensure constants are reachable
+const _BOLD_CHECK: &str = BOLD; // ensure constants are reachable
 
-macro_rules! dim    { ($s:expr) => { format!("{DIM}{}{RESET}",  $s) } }
+macro_rules! dim {
+    ($s:expr) => {
+        format!("{DIM}{}{RESET}", $s)
+    };
+}
 
 // ── CLI definition ─────────────────────────────────────────────────────────────
 #[derive(Parser)]
@@ -107,9 +111,15 @@ fn cmd_dashboard() -> i32 {
         "docs ↗",
     );
     let (l3_dot, l3_label) = if !cfg.layers.semantic.enabled {
-        (format!("{}○{}", DIM, RESET), format!("{}Semantic AI  disabled{}", DIM, RESET))
+        (
+            format!("{}○{}", DIM, RESET),
+            format!("{}Semantic AI  disabled{}", DIM, RESET),
+        )
     } else if healthy {
-        (format!("{}●{}", GREEN, RESET), format!("Semantic AI (Gemma 4 E2B)  {}online{}", GREEN, RESET))
+        (
+            format!("{}●{}", GREEN, RESET),
+            format!("Semantic AI (Gemma 4 E2B)  {}online{}", GREEN, RESET),
+        )
     } else {
         (
             format!("{}○{}", RED, RESET),
@@ -129,24 +139,50 @@ fn cmd_dashboard() -> i32 {
 
     eprintln!(
         "\n  {}Provn{}  ·  {}AI-powered secret & IP leak detection{}  ·  {}\n",
-        BOLD, RESET,
-        DIM, RESET,
+        BOLD,
+        RESET,
+        DIM,
+        RESET,
         dim!(env!("CARGO_PKG_VERSION")),
     );
     eprintln!("  {}Layers{}", BOLD, RESET);
-    eprintln!("    Layer 1  {}●{}  Regex patterns          always active", GREEN, RESET);
-    eprintln!("    Layer 2  {}●{}  Entropy + AST analysis  always active", GREEN, RESET);
+    eprintln!(
+        "    Layer 1  {}●{}  Regex patterns          always active",
+        GREEN, RESET
+    );
+    eprintln!(
+        "    Layer 2  {}●{}  Entropy + AST analysis  always active",
+        GREEN, RESET
+    );
     eprintln!("    Layer 3  {}  {}", l3_dot, l3_label);
     eprintln!();
     eprintln!("  {}Pre-commit hook{}  {}", BOLD, RESET, hook_status);
     eprintln!();
     eprintln!("  {}Commands{}", BOLD, RESET);
-    eprintln!("    {}provn check <path>{}     scan a file for secrets or IP leaks", CYAN, RESET);
-    eprintln!("    {}provn scan{}             scan staged git changes", CYAN, RESET);
-    eprintln!("    {}provn server start{}     enable Layer 3 semantic AI", CYAN, RESET);
-    eprintln!("    {}provn server status{}    check if Layer 3 is online", CYAN, RESET);
-    eprintln!("    {}provn install{}          install git pre-commit hook", CYAN, RESET);
-    eprintln!("    {}provn verify-audit{}     verify audit log integrity", CYAN, RESET);
+    eprintln!(
+        "    {}provn check <path>{}     scan a file for secrets or IP leaks",
+        CYAN, RESET
+    );
+    eprintln!(
+        "    {}provn scan{}             scan staged git changes",
+        CYAN, RESET
+    );
+    eprintln!(
+        "    {}provn server start{}     enable Layer 3 semantic AI",
+        CYAN, RESET
+    );
+    eprintln!(
+        "    {}provn server status{}    check if Layer 3 is online",
+        CYAN, RESET
+    );
+    eprintln!(
+        "    {}provn install{}          install git pre-commit hook",
+        CYAN, RESET
+    );
+    eprintln!(
+        "    {}provn verify-audit{}     verify audit log integrity",
+        CYAN, RESET
+    );
     eprintln!();
     eprintln!("  {}https://github.com/kshitizz36/Provn{}", DIM, RESET);
     eprintln!();
@@ -172,7 +208,9 @@ fn check_remote_allowed(cfg: &config::Config) -> bool {
     if remote.is_empty() {
         return true; // local-only repo, no remote to check
     }
-    cfg.allowed_remotes.iter().any(|pattern| wildcard_match(pattern, &remote))
+    cfg.allowed_remotes
+        .iter()
+        .any(|pattern| wildcard_match(pattern, &remote))
 }
 
 /// Minimal wildcard match: `*` matches any sequence of characters.
@@ -183,12 +221,18 @@ fn wildcard_match(pattern: &str, text: &str) -> bool {
     }
     let mut pos = 0usize;
     for (i, part) in parts.iter().enumerate() {
-        if part.is_empty() { continue; }
+        if part.is_empty() {
+            continue;
+        }
         if i == 0 {
-            if !text.starts_with(part) { return false; }
+            if !text.starts_with(part) {
+                return false;
+            }
             pos = part.len();
         } else if i == parts.len() - 1 {
-            if !text[pos..].ends_with(part) { return false; }
+            if !text[pos..].ends_with(part) {
+                return false;
+            }
         } else {
             match text[pos..].find(part) {
                 Some(idx) => pos += idx + part.len(),
@@ -216,19 +260,28 @@ fn cmd_scan() -> i32 {
         eprintln!();
         eprintln!("  {}✗  blocked  [remote not in allowlist]{}", RED, RESET);
         eprintln!("  {}Remote: {}{}", DIM, remote, RESET);
-        eprintln!("  {}Add to allowed_remotes in provn.yml to permit commits to this remote.{}", DIM, RESET);
+        eprintln!(
+            "  {}Add to allowed_remotes in provn.yml to permit commits to this remote.{}",
+            DIM, RESET
+        );
         eprintln!();
         return 1;
     }
 
     if cfg.mode == "shadow" {
-        eprintln!("{}  shadow mode — logging only, commits always pass{}", DIM, RESET);
+        eprintln!(
+            "{}  shadow mode — logging only, commits always pass{}",
+            DIM, RESET
+        );
     }
 
     let chunks = match diff::parse_staged_diff(&cfg) {
         Ok(c) => c,
         Err(e) => {
-            eprintln!("{}provn  could not read diff: {e} — allowing commit{}", DIM, RESET);
+            eprintln!(
+                "{}provn  could not read diff: {e} — allowing commit{}",
+                DIM, RESET
+            );
             return 0;
         }
     };
@@ -238,10 +291,15 @@ fn cmd_scan() -> i32 {
     }
 
     let findings = scanner::scan_chunks(&chunks, &cfg);
-    let latency  = findings.first().map(|r| r.latency_ms).unwrap_or(0);
+    let latency = findings.first().map(|r| r.latency_ms).unwrap_or(0);
 
     if findings.is_empty() {
-        eprintln!("  {}✓  clean{}  {}", GREEN, RESET, dim!(format!("{latency}ms")));
+        eprintln!(
+            "  {}✓  clean{}  {}",
+            GREEN,
+            RESET,
+            dim!(format!("{latency}ms"))
+        );
         return 0;
     }
 
@@ -258,14 +316,19 @@ fn cmd_scan() -> i32 {
             policy::Verdict::Warn(tier) => {
                 eprintln!(
                     "  {}⚠  [{}]{}  {}  {}",
-                    YELLOW, tier, RESET,
+                    YELLOW,
+                    tier,
+                    RESET,
                     result.file.as_deref().unwrap_or("?"),
                     dim!(result.description.as_deref().unwrap_or("")),
                 );
             }
             policy::Verdict::Block(tier) => {
                 if cfg.mode == "shadow" {
-                    eprintln!("  {}[shadow]{}  would block [{}] — allowing", DIM, RESET, tier);
+                    eprintln!(
+                        "  {}[shadow]{}  would block [{}] — allowing",
+                        DIM, RESET, tier
+                    );
                     continue;
                 }
                 print_block(result, tier);
@@ -292,7 +355,12 @@ fn cmd_scan() -> i32 {
     }
 
     if !did_block && exit_code == 0 {
-        eprintln!("  {}✓  clean{}  {}", GREEN, RESET, dim!(format!("{latency}ms")));
+        eprintln!(
+            "  {}✓  clean{}  {}",
+            GREEN,
+            RESET,
+            dim!(format!("{latency}ms"))
+        );
     }
 
     exit_code
@@ -305,16 +373,26 @@ fn print_block(result: &scanner::ScanResult, tier: &str) {
         eprintln!("  {}", dim!(d));
     }
     if let Some(f) = &result.file {
-        eprintln!("  {}:{}{}",
+        eprintln!(
+            "  {}:{}{}",
             f,
             result.line.unwrap_or(0),
-            if let Some(l) = &result.layer { format!("  {}", dim!(format!("via {l}"))) } else { String::new() }
+            if let Some(l) = &result.layer {
+                format!("  {}", dim!(format!("via {l}")))
+            } else {
+                String::new()
+            }
         );
     }
     if let Some(s) = &result.snippet {
         let short: String = s.chars().take(80).collect();
         eprintln!("\n  {}- {}{}", RED, short, RESET);
-        eprintln!("  {}+ {}{}", GREEN, result.redacted.as_deref().unwrap_or("PROVN_REDACTED"), RESET);
+        eprintln!(
+            "  {}+ {}{}",
+            GREEN,
+            result.redacted.as_deref().unwrap_or("PROVN_REDACTED"),
+            RESET
+        );
     }
 }
 
@@ -334,49 +412,64 @@ fn cmd_check(file: &str, json: bool) -> i32 {
     };
 
     let findings = scanner::scan_chunks(&chunks, &cfg);
-    let latency  = findings.first().map(|r| r.latency_ms).unwrap_or(0);
-    let clean    = findings.is_empty();
+    let latency = findings.first().map(|r| r.latency_ms).unwrap_or(0);
+    let clean = findings.is_empty();
 
     if json {
-        let items: Vec<_> = findings.iter().map(|r| serde_json::json!({
-            "file":        r.file,
-            "line":        r.line,
-            "match_type":  r.match_type,
-            "tier":        r.tier,
-            "layer":       r.layer,
-            "confidence":  r.confidence,
-            "description": r.description,
-            "snippet":     r.snippet,
-            "redacted":    r.redacted,
-        })).collect();
-        println!("{}", serde_json::json!({
-            "file":       file,
-            "clean":      clean,
-            "findings":   items,
-            "latency_ms": latency,
-        }));
+        let items: Vec<_> = findings
+            .iter()
+            .map(|r| {
+                serde_json::json!({
+                    "file":        r.file,
+                    "line":        r.line,
+                    "match_type":  r.match_type,
+                    "tier":        r.tier,
+                    "layer":       r.layer,
+                    "confidence":  r.confidence,
+                    "description": r.description,
+                    "snippet":     r.snippet,
+                    "redacted":    r.redacted,
+                })
+            })
+            .collect();
+        println!(
+            "{}",
+            serde_json::json!({
+                "file":       file,
+                "clean":      clean,
+                "findings":   items,
+                "latency_ms": latency,
+            })
+        );
         return if clean { 0 } else { 1 };
     }
 
     if clean {
-        println!("  {}✓  clean{}  {}", GREEN, RESET, dim!(format!("{latency}ms")));
+        println!(
+            "  {}✓  clean{}  {}",
+            GREEN,
+            RESET,
+            dim!(format!("{latency}ms"))
+        );
         return 0;
     }
 
     for result in &findings {
         let verdict = policy::determine_verdict(result, &cfg);
         let tier = match &verdict {
-            policy::Verdict::Allow          => continue,
+            policy::Verdict::Allow => continue,
             policy::Verdict::Warn(t) | policy::Verdict::Block(t) => t.clone(),
         };
-        let desc  = result.description.as_deref().unwrap_or("unknown");
-        let layer = result.layer.as_deref()
+        let desc = result.description.as_deref().unwrap_or("unknown");
+        let layer = result
+            .layer
+            .as_deref()
             .map(|l| format!("  {}", dim!(format!("via {l}"))))
             .unwrap_or_default();
         let loc = match (result.file.as_deref(), result.line) {
             (Some(f), Some(l)) => format!("  {}", dim!(format!("{f}:{l}"))),
-            (Some(f), None)    => format!("  {}", dim!(f)),
-            _                  => String::new(),
+            (Some(f), None) => format!("  {}", dim!(f)),
+            _ => String::new(),
         };
         println!("  {}✗  [{}]{}  {}{}{}", RED, tier, RESET, desc, layer, loc);
     }
@@ -390,9 +483,17 @@ fn cmd_verify_audit() -> i32 {
     match audit::verify_chain(&cfg.audit.path, &cfg.audit.hmac_key_path) {
         Ok(count) => {
             if count == 0 {
-                println!("  {}✓  no audit entries yet{}  {}", GREEN, RESET, dim!("fresh repo or no findings logged"));
+                println!(
+                    "  {}✓  no audit entries yet{}  {}",
+                    GREEN,
+                    RESET,
+                    dim!("fresh repo or no findings logged")
+                );
             } else {
-                println!("  {}✓  audit chain intact{}  {} entries", GREEN, RESET, count);
+                println!(
+                    "  {}✓  audit chain intact{}  {} entries",
+                    GREEN, RESET, count
+                );
             }
             0
         }
@@ -437,6 +538,32 @@ fn cmd_install() -> i32 {
 // ── Server ─────────────────────────────────────────────────────────────────────
 const PLIST_LABEL: &str = "com.provn.semantic-server";
 
+fn print_server_status() -> i32 {
+    if server_healthy() {
+        eprintln!("  {}●  Layer 3 online{}  ·  127.0.0.1:8080", GREEN, RESET);
+        eprintln!(
+            "  {}Gemma 4 E2B · Q4_K_M · ambiguous-case classifier{}",
+            DIM, RESET
+        );
+        0
+    } else {
+        eprintln!("  {}○  Layer 3 offline{}", RED, RESET);
+        eprintln!(
+            "  {}provn server start{}  to enable semantic AI  {}{}{}",
+            CYAN,
+            RESET,
+            DIM,
+            hyperlink(
+                "https://github.com/kshitizz36/Provn#layer-3-semantic-ai",
+                "docs ↗"
+            ),
+            RESET,
+        );
+        1
+    }
+}
+
+#[cfg(target_os = "macos")]
 fn cmd_server(action: ServerAction) -> i32 {
     let plist = format!(
         "{}/Library/LaunchAgents/{PLIST_LABEL}.plist",
@@ -449,9 +576,18 @@ fn cmd_server(action: ServerAction) -> i32 {
         ServerAction::Start => {
             eprintln!();
             eprintln!("  {}Layer 3  ·  Semantic AI{}", BOLD, RESET);
-            eprintln!("  {}model   {}Gemma 4 E2B · fine-tuned on LeakBench · Q4_K_M{}", DIM, RESET, DIM);
-            eprintln!("  {}scope   {}ambiguous detections only  (confidence 40 – 80 %%){}", DIM, RESET, DIM);
-            eprintln!("  {}logs    {}/tmp/provn-semantic-server.log{}", DIM, RESET, DIM);
+            eprintln!(
+                "  {}model   {}Gemma 4 E2B · fine-tuned on LeakBench · Q4_K_M{}",
+                DIM, RESET, DIM
+            );
+            eprintln!(
+                "  {}scope   {}ambiguous detections only  (confidence 40 – 80 %%){}",
+                DIM, RESET, DIM
+            );
+            eprintln!(
+                "  {}logs    {}/tmp/provn-semantic-server.log{}",
+                DIM, RESET, DIM
+            );
             eprintln!();
 
             if server_healthy() {
@@ -475,7 +611,10 @@ fn cmd_server(action: ServerAction) -> i32 {
             match out {
                 Ok(o) if o.status.success() => {
                     eprintln!("  {}●  online{}  ·  127.0.0.1:8080", GREEN, RESET);
-                    eprintln!("  {}model loads in ~25 s  ·  provn server status to confirm{}", DIM, RESET);
+                    eprintln!(
+                        "  {}model loads in ~25 s  ·  provn server status to confirm{}",
+                        DIM, RESET
+                    );
                 }
                 Ok(o) => {
                     eprintln!();
@@ -503,12 +642,20 @@ fn cmd_server(action: ServerAction) -> i32 {
             match out {
                 Ok(o) if o.status.success() => {
                     eprintln!("  {}○  semantic server stopped{}", DIM, RESET);
-                    eprintln!("  {}Layer 3 will fall back to Layer 1 / 2 result{}", DIM, RESET);
+                    eprintln!(
+                        "  {}Layer 3 will fall back to Layer 1 / 2 result{}",
+                        DIM, RESET
+                    );
                     0
                 }
                 Ok(o) => {
                     let stderr = String::from_utf8_lossy(&o.stderr);
-                    eprintln!("  {}✗  {}{}  (may already be stopped)", RED, RESET, stderr.trim());
+                    eprintln!(
+                        "  {}✗  {}{}  (may already be stopped)",
+                        RED,
+                        RESET,
+                        stderr.trim()
+                    );
                     1
                 }
                 Err(e) => {
@@ -518,19 +665,52 @@ fn cmd_server(action: ServerAction) -> i32 {
             }
         }
 
-        ServerAction::Status => {
+        ServerAction::Status => print_server_status(),
+    }
+}
+
+#[cfg(not(target_os = "macos"))]
+fn cmd_server(action: ServerAction) -> i32 {
+    match action {
+        ServerAction::Status => print_server_status(),
+        ServerAction::Start => {
+            eprintln!();
             if server_healthy() {
-                eprintln!("  {}●  Layer 3 online{}  ·  127.0.0.1:8080", GREEN, RESET);
-                eprintln!("  {}Gemma 4 E2B · Q4_K_M · ambiguous-case classifier{}", DIM, RESET);
-                0
-            } else {
-                eprintln!("  {}○  Layer 3 offline{}", RED, RESET);
-                eprintln!("  {}provn server start{}  to enable semantic AI  {}{}{}",
-                    CYAN, RESET, DIM,
-                    hyperlink("https://github.com/kshitizz36/Provn#layer-3-semantic-ai", "docs ↗"),
-                    RESET,
+                eprintln!("  {}●  already online{}  ·  127.0.0.1:8080", GREEN, RESET);
+                eprintln!();
+                return 0;
+            }
+
+            eprintln!("  {}Layer 3  ·  Semantic AI{}", BOLD, RESET);
+            eprintln!(
+                "  {}auto-start is currently supported on macOS only{}",
+                YELLOW, RESET
+            );
+            eprintln!(
+                "  {}Start your local semantic server manually, then run {}provn server status{}{}",
+                DIM, CYAN, RESET, DIM
+            );
+            eprintln!(
+                "  {}https://github.com/kshitizz36/Provn#layer-3-semantic-ai{}",
+                DIM, RESET
+            );
+            eprintln!();
+            1
+        }
+        ServerAction::Stop => {
+            if server_healthy() {
+                eprintln!(
+                    "  {}✗  auto-stop is currently supported on macOS only{}",
+                    YELLOW, RESET
+                );
+                eprintln!(
+                    "  {}Stop your semantic server manually on this platform.{}",
+                    DIM, RESET
                 );
                 1
+            } else {
+                eprintln!("  {}○  Layer 3 offline{}", DIM, RESET);
+                0
             }
         }
     }
@@ -544,7 +724,10 @@ fn hyperlink(url: &str, label: &str) -> String {
 
 fn server_healthy() -> bool {
     let cfg = config::load().unwrap_or_default();
-    let base = cfg.layers.semantic.endpoint
+    let base = cfg
+        .layers
+        .semantic
+        .endpoint
         .trim_end_matches('/')
         .trim_end_matches("/completion")
         .to_string();

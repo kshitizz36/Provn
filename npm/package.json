@@ -1,6 +1,6 @@
 {
   "name": "provn",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "AI-powered secret & IP leak detection \u2014 stops threats before they leave your machine",
   "keywords": [
     "security",
@@ -16,7 +16,9 @@
     "url": "git+https://github.com/kshitizz36/Provn.git"
   },
   "license": "MIT",
-  "bin": "./bin/provn.js",
+  "bin": {
+    "provn": "./bin/provn.js"
+  },
   "scripts": {
     "postinstall": "node postinstall.js"
   },

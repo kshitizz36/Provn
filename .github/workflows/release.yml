@@ -5,6 +5,9 @@ on:
     tags:
       - "v*"
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
 permissions:
   contents: write
 
@@ -20,10 +23,22 @@ jobs:
             target: aarch64-apple-darwin
             artifact: provn-aarch64-apple-darwin
             ext: ""
-          - os: macos-13
+          - os: macos-15-intel
             target: x86_64-apple-darwin
             artifact: provn-x86_64-apple-darwin
             ext: ""
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+            artifact: provn-x86_64-linux
+            ext: ""
+          - os: ubuntu-24.04-arm
+            target: aarch64-unknown-linux-gnu
+            artifact: provn-aarch64-linux
+            ext: ""
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc
+            artifact: provn-x86_64-windows
+            ext: ".exe"
 
     steps:
       - uses: actions/checkout@v4
@@ -43,13 +58,21 @@ jobs:
             provn-cli/target
           key: ${{ runner.os }}-${{ matrix.target }}-cargo-${{ hashFiles('provn-cli/Cargo.lock') }}
 
-      - name: Build release binary
+      - name: Build release binary (Unix)
+        if: runner.os != 'Windows'
         run: |
           cd provn-cli
           cargo build --release --target ${{ matrix.target }}
 
-      - name: Package (macOS)
-        if: matrix.ext == ''
+      - name: Build release binary (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          Set-Location provn-cli
+          cargo build --release --target ${{ matrix.target }}
+
+      - name: Package (Unix)
+        if: runner.os != 'Windows'
         run: |
           cp provn-cli/target/${{ matrix.target }}/release/provn provn
           tar czf ${{ matrix.artifact }}.tar.gz provn
@@ -59,16 +82,33 @@ jobs:
             shasum -a 256 ${{ matrix.artifact }}.tar.gz > ${{ matrix.artifact }}.tar.gz.sha256
           fi
 
-      - name: Upload artifacts
+      - name: Package (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          Copy-Item "provn-cli/target/${{ matrix.target }}/release/provn.exe" "provn.exe"
+          Compress-Archive -Path "provn.exe" -DestinationPath "${{ matrix.artifact }}.zip" -Force
+          (Get-FileHash "${{ matrix.artifact }}.zip" -Algorithm SHA256).Hash.ToLower() + "  ${{ matrix.artifact }}.zip" | Out-File -FilePath "${{ matrix.artifact }}.zip.sha256" -Encoding ascii
+
+      - name: Upload Unix artifacts
+        if: runner.os != 'Windows'
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.artifact }}
           path: |
             ${{ matrix.artifact }}.tar.gz
             ${{ matrix.artifact }}.tar.gz.sha256
+          if-no-files-found: error
+
+      - name: Upload Windows artifacts
+        if: runner.os == 'Windows'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}
+          path: |
             ${{ matrix.artifact }}.zip
             ${{ matrix.artifact }}.zip.sha256
-          if-no-files-found: ignore
+          if-no-files-found: error
 
   release:
     name: Create GitHub Release
@@ -101,6 +141,11 @@ jobs:
             echo "**Homebrew**"
             echo '```bash'
             echo "brew install kshitizz36/tap/provn"
+            echo '```'
+            echo
+            echo "**Windows**"
+            echo '```powershell'
+            echo "Download provn-x86_64-windows.zip from this release and add provn.exe to PATH"
             echo '```'
             echo
             echo "## Checksums"
@@ -146,7 +191,7 @@ jobs:
         if: steps.npm_auth.outputs.enabled == 'true'
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           registry-url: https://registry.npmjs.org
 
       - name: Verify tag matches package version
