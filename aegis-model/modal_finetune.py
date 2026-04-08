@@ -16,7 +16,7 @@ import modal
 
 app = modal.App("provn-finetune")
 
-vol = modal.Volume.from_name("provn-model-vol", create_if_missing=True)
+vol = modal.Volume.from_name("aegis-model-vol", create_if_missing=True)
 VOLUME_PATH = "/model"
 
 finetune_image = (
@@ -385,7 +385,7 @@ def gguf_export():
     )
     vol.commit()
 
-    gguf_file = f"{GGUF_PATH}/provn-gemma4-e2b-q4_k_m.gguf"
+    gguf_file = f"{GGUF_PATH}/Gemma-4-E2B-it.Q4_K_M.gguf"
     size_gb = os.path.getsize(gguf_file) / 1e9 if os.path.isfile(gguf_file) else -1
     print(f"GGUF export complete. File size: {size_gb:.2f} GB")
     return {"status": "success", "path": gguf_file, "size_gb": size_gb}
@@ -398,8 +398,12 @@ def main_gguf():
     result = gguf_export.remote()
     print(f"Done: {result}")
     print(f"\nTo serve locally:")
-    print(f"  modal volume get provn-model-vol provn-gemma4-e2b-gguf ~/.provn/models/")
-    print(f"  llama-server -m ~/.provn/models/provn-gemma4-e2b-gguf/provn-gemma4-e2b-q4_k_m.gguf --port 8080")
+    print(
+        "  modal volume get aegis-model-vol "
+        "/aegis-gemma4-e2b-gguf_gguf/Gemma-4-E2B-it.Q4_K_M.gguf "
+        "~/.provn/models/provn-gemma4-e2b-q4km.gguf"
+    )
+    print("  llama-server -m ~/.provn/models/provn-gemma4-e2b-q4km.gguf --port 8080")
 
 
 def _print_report(report):

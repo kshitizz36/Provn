@@ -32,6 +32,7 @@ find_model_path() {
 
   candidates+=(
     "$HOME/.provn/models/provn-gemma4-e2b-q4km.gguf"
+    "$HOME/.provn/models/Gemma-4-E2B-it.Q4_K_M.gguf"
     "$HOME/.provn/models/provn-gemma4-e2b.gguf"
     "$HOME/.provn/models/provn-gemma4-e2b-gguf"
     "$HOME/.aegis/models/aegis-gemma4-e2b-q4km.gguf"
@@ -49,7 +50,7 @@ find_model_path() {
 
   candidate="$(
     find "$HOME/.provn/models" "$HOME/.aegis/models" -maxdepth 1 -type f \
-      \( -name 'provn-gemma4-e2b*' -o -name 'aegis-gemma4-e2b*' -o -name '*.gguf' \) \
+      \( -name 'provn-gemma4-e2b*' -o -name 'aegis-gemma4-e2b*' -o -name 'Gemma-4-E2B-it.Q4_K_M.gguf' -o -name '*.gguf' \) \
       2>/dev/null | head -n 1 || true
   )"
   if [[ -n "$candidate" ]]; then
@@ -95,6 +96,8 @@ if [[ -z "$MODEL_PATH" ]]; then
   echo "Provn could not find a GGUF model."
   echo "Expected one of:"
   echo "  - \$PROVN_MODEL_PATH"
+  echo "  - ~/.provn/models/provn-gemma4-e2b-q4km.gguf"
+  echo "  - ~/.provn/models/Gemma-4-E2B-it.Q4_K_M.gguf"
   echo "  - ~/.provn/models/provn-gemma4-e2b.gguf"
   echo "  - ~/.provn/models/provn-gemma4-e2b-gguf"
   echo "  - ~/.aegis/models/aegis-gemma4-e2b.gguf"

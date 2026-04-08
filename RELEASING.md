@@ -3,7 +3,7 @@
 ## One-time setup
 
 - GitHub repo Settings > Actions > General > Workflow permissions > **Read and write permissions**
-- Add repository secret `NPM_TOKEN` to publish `@kshitizz36/provn` to npm
+- Add repository secret `NPM_TOKEN` to publish `provn-cli` to npm
 - Optional: create `kshitizz36/homebrew-tap` and add repository secret `TAP_GITHUB_TOKEN`
 
 ## Release flow

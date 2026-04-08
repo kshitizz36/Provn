@@ -13,7 +13,7 @@ Provn is a pre-commit security scanner that blocks secrets, API keys, and propri
 **npm**
 
 ```bash
-npm install -g provn
+npm install -g provn-cli
 ```
 
 **Homebrew**

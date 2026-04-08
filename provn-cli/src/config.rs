@@ -86,7 +86,7 @@ pub struct SemanticConfig {
     /// GGUF filename or absolute path loaded by the local llama-server helper.
     #[serde(default = "default_semantic_model")]
     pub model: String,
-    /// llama-server HTTP endpoint (run: llama-server -m provn-gemma4-e2b.gguf)
+    /// llama-server HTTP endpoint (run: llama-server -m provn-gemma4-e2b-q4km.gguf)
     #[serde(default = "default_semantic_endpoint")]
     pub endpoint: String,
     /// Max ms to wait before falling back to Layer 1/2 result
@@ -219,7 +219,7 @@ fn default_sensitive_vars() -> Vec<String> {
 }
 fn default_audit_path() -> String { ".provn/audit.jsonl".to_string() }
 fn default_hmac_key_path() -> String { ".provn/hmac.key".to_string() }
-fn default_semantic_model() -> String { "provn-gemma4-e2b.gguf".to_string() }
+fn default_semantic_model() -> String { "provn-gemma4-e2b-q4km.gguf".to_string() }
 fn default_semantic_endpoint() -> String { "http://localhost:8080".to_string() }
 fn default_semantic_timeout() -> u64 { 2000 }
 fn default_semantic_fallback() -> String { "layer1".to_string() }

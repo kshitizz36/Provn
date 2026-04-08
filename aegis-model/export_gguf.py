@@ -7,7 +7,7 @@ import modal
 import pathlib
 
 app = modal.App("provn-export")
-vol = modal.Volume.from_name("provn-model-vol", create_if_missing=False)
+vol = modal.Volume.from_name("aegis-model-vol", create_if_missing=False)
 
 OUTPUT_DIR = pathlib.Path.home() / ".provn" / "models"
 
@@ -32,7 +32,7 @@ def export():
 @app.local_entrypoint()
 def main():
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-    out_path = OUTPUT_DIR / "provn-gemma4-e2b.gguf"
+    out_path = OUTPUT_DIR / "provn-gemma4-e2b-q4km.gguf"
 
     print("Downloading GGUF from Modal volume...")
     data = export.remote()
