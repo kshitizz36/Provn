@@ -125,7 +125,7 @@ jobs:
             echo
             echo "**npm**"
             echo '```bash'
-            echo "npm install -g @kshitizz36/provn"
+            echo "npm install -g provn"
             echo '```'
             echo
             echo "**Homebrew**"

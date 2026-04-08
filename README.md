@@ -13,7 +13,7 @@ Provn is a pre-commit security scanner that blocks secrets, API keys, and propri
 **npm**
 
 ```bash
-npm install -g @kshitizz36/provn
+npm install -g provn
 ```
 
 **Homebrew**
@@ -136,7 +136,7 @@ If you want a simple manual CI step today, build from source inside the workflow
   run: ./provn-cli/target/release/provn check --json path/to/file
 ```
 
-The built-in workflow publishes the npm package on release when `NPM_TOKEN` is configured.
+The built-in workflow can publish the npm package on release when npm publishing is configured.
 
 ---
 
