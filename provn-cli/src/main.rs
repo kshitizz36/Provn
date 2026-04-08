@@ -172,6 +172,10 @@ fn cmd_dashboard() -> i32 {
         CYAN, RESET
     );
     eprintln!(
+        "    {}provn server stop{}      stop Layer 3 semantic AI",
+        CYAN, RESET
+    );
+    eprintln!(
         "    {}provn server status{}    check if Layer 3 is online",
         CYAN, RESET
     );

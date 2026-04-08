@@ -1,6 +1,6 @@
 {
   "name": "provn-cli",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "AI-powered secret & IP leak detection \u2014 stops threats before they leave your machine",
   "keywords": [
     "security",
