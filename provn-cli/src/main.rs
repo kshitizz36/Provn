@@ -536,6 +536,7 @@ fn cmd_install() -> i32 {
 }
 
 // ── Server ─────────────────────────────────────────────────────────────────────
+#[cfg(target_os = "macos")]
 const PLIST_LABEL: &str = "com.provn.semantic-server";
 
 fn print_server_status() -> i32 {
