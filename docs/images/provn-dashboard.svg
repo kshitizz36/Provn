@@ -1,0 +1,53 @@
+<svg width="1200" height="760" viewBox="0 0 1200 760" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="760" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0B0F14"/>
+      <stop offset="1" stop-color="#11161D"/>
+    </linearGradient>
+    <filter id="shadow" x="100" y="90" width="1000" height="610" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="18" stdDeviation="22" flood-color="#000000" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+  <rect width="1200" height="760" rx="28" fill="url(#bg)"/>
+  <g filter="url(#shadow)">
+    <rect x="150" y="120" width="900" height="560" rx="18" fill="#10151C"/>
+    <rect x="150" y="120" width="900" height="42" rx="18" fill="#1B222C"/>
+    <circle cx="182" cy="141" r="8" fill="#FF5F57"/>
+    <circle cx="208" cy="141" r="8" fill="#FEBC2E"/>
+    <circle cx="234" cy="141" r="8" fill="#28C840"/>
+    <text x="600" y="147" fill="#AEB9C9" font-size="20" text-anchor="middle" font-family="SFMono-Regular, Menlo, Consolas, monospace">provn</text>
+  </g>
+  <text x="190" y="205" fill="#57C7FF" font-size="24" font-family="SFMono-Regular, Menlo, Consolas, monospace">❯ provn</text>
+
+  <text x="190" y="258" fill="#F6F8FA" font-size="28" font-family="SFMono-Regular, Menlo, Consolas, monospace">Provn</text>
+  <text x="305" y="258" fill="#7F8C9F" font-size="28" font-family="SFMono-Regular, Menlo, Consolas, monospace">· AI-powered secret &amp; IP detection · 0.0.2</text>
+
+  <text x="190" y="315" fill="#F6F8FA" font-size="26" font-family="SFMono-Regular, Menlo, Consolas, monospace">Layers</text>
+  <text x="215" y="352" fill="#F6F8FA" font-size="23" font-family="SFMono-Regular, Menlo, Consolas, monospace">Layer 1</text>
+  <text x="325" y="352" fill="#28C840" font-size="23" font-family="SFMono-Regular, Menlo, Consolas, monospace">●</text>
+  <text x="355" y="352" fill="#D5DEE9" font-size="23" font-family="SFMono-Regular, Menlo, Consolas, monospace">Regex patterns</text>
+  <text x="735" y="352" fill="#D5DEE9" font-size="23" font-family="SFMono-Regular, Menlo, Consolas, monospace">always active</text>
+
+  <text x="215" y="387" fill="#F6F8FA" font-size="23" font-family="SFMono-Regular, Menlo, Consolas, monospace">Layer 2</text>
+  <text x="325" y="387" fill="#28C840" font-size="23" font-family="SFMono-Regular, Menlo, Consolas, monospace">●</text>
+  <text x="355" y="387" fill="#D5DEE9" font-size="23" font-family="SFMono-Regular, Menlo, Consolas, monospace">Entropy + AST analysis</text>
+  <text x="735" y="387" fill="#D5DEE9" font-size="23" font-family="SFMono-Regular, Menlo, Consolas, monospace">always active</text>
+
+  <text x="215" y="422" fill="#F6F8FA" font-size="23" font-family="SFMono-Regular, Menlo, Consolas, monospace">Layer 3</text>
+  <text x="325" y="422" fill="#28C840" font-size="23" font-family="SFMono-Regular, Menlo, Consolas, monospace">●</text>
+  <text x="355" y="422" fill="#D5DEE9" font-size="23" font-family="SFMono-Regular, Menlo, Consolas, monospace">Semantic AI (Gemma 4 E2B)</text>
+  <text x="845" y="422" fill="#28C840" font-size="23" font-family="SFMono-Regular, Menlo, Consolas, monospace">online</text>
+
+  <text x="190" y="485" fill="#F6F8FA" font-size="26" font-family="SFMono-Regular, Menlo, Consolas, monospace">Commands</text>
+  <text x="215" y="522" fill="#57C7FF" font-size="22" font-family="SFMono-Regular, Menlo, Consolas, monospace">provn check &lt;path&gt;</text>
+  <text x="500" y="522" fill="#D5DEE9" font-size="22" font-family="SFMono-Regular, Menlo, Consolas, monospace">scan a file for secrets or IP leaks</text>
+
+  <text x="215" y="556" fill="#57C7FF" font-size="22" font-family="SFMono-Regular, Menlo, Consolas, monospace">provn scan</text>
+  <text x="500" y="556" fill="#D5DEE9" font-size="22" font-family="SFMono-Regular, Menlo, Consolas, monospace">scan staged git changes</text>
+
+  <text x="215" y="590" fill="#57C7FF" font-size="22" font-family="SFMono-Regular, Menlo, Consolas, monospace">provn server start</text>
+  <text x="500" y="590" fill="#D5DEE9" font-size="22" font-family="SFMono-Regular, Menlo, Consolas, monospace">enable Layer 3 semantic AI</text>
+
+  <text x="215" y="624" fill="#57C7FF" font-size="22" font-family="SFMono-Regular, Menlo, Consolas, monospace">provn server stop</text>
+  <text x="500" y="624" fill="#D5DEE9" font-size="22" font-family="SFMono-Regular, Menlo, Consolas, monospace">stop Layer 3 semantic AI</text>
+</svg>

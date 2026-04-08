@@ -1,45 +1,79 @@
 # Provn
 
-**AI-powered secret & IP leak detection — stops threats before they leave your machine.**
+<div align="center">
+  <img src="https://raw.githubusercontent.com/kshitizz36/Provn/main/docs/images/provn-logo.png" alt="Provn logo" width="170" />
+  <h3>AI-powered secret and IP leak detection that runs before code leaves your machine.</h3>
+  <p>
+    <code>npm install -g provn-cli</code>
+    <br/>
+    or
+    <br/>
+    <code>brew install kshitizz36/tap/provn</code>
+  </p>
+  <p><strong>Layer 1 + Layer 2 work immediately.</strong> Layer 3 AI is optional and installs separately.</p>
+</div>
 
-Provn is a pre-commit security scanner that blocks secrets, API keys, and proprietary IP from reaching git — in under 50ms. A 3-layer detection engine (regex → entropy → AI) runs on every staged change, with an optional on-device Gemma 4 fine-tuned classifier for ambiguous cases.
+<p align="center">
+  <img src="https://raw.githubusercontent.com/kshitizz36/Provn/main/docs/images/provn-dashboard.svg" alt="Provn CLI dashboard" width="920" />
+</p>
+
+Provn is a local-first pre-commit security scanner that blocks secrets, API keys, tokens, private keys, and proprietary snippets before they land in git. It is fast enough for normal commits, works as a standalone CLI, and can optionally add an on-device Gemma classifier for ambiguous cases.
 
 ---
 
 ## Install
 
-### From a published release
-
-**npm**
+### CLI only
 
 ```bash
 npm install -g provn-cli
 ```
 
-**Homebrew**
-
 ```bash
 brew install kshitizz36/tap/provn
 ```
-
-**curl installer**
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/kshitizz36/Provn/main/install.sh | bash
 ```
 
-### Build from source
-
-Requires [Rust](https://rustup.rs) 1.86+.
+### No-clone quick start
 
 ```bash
-git clone https://github.com/kshitizz36/Provn
-cd Provn/provn-cli
-cargo build --release
-sudo cp target/release/provn /usr/local/bin/
+cd your-repo
+provn install
+git add .
+git commit -m "first protected commit"
 ```
 
-Source builds work today. npm, GitHub Releases, and the curl installer become available once a tagged release is published. Homebrew also requires the `kshitizz36/homebrew-tap` repository and `TAP_GITHUB_TOKEN` to be configured.
+### Add the AI layer later
+
+You do **not** need to clone the Provn repo to use Layer 3. Install the CLI first, then download the model separately from Hugging Face.
+
+Model page:
+[https://huggingface.co/kshitizz36/provn-gemma4-e2b-q4km](https://huggingface.co/kshitizz36/provn-gemma4-e2b-q4km)
+
+**macOS / Linux**
+
+```bash
+brew install hf
+hf auth login
+mkdir -p ~/.provn/models
+hf download kshitizz36/provn-gemma4-e2b-q4km provn-gemma4-e2b-q4km.gguf --local-dir ~/.provn/models
+llama-server -m ~/.provn/models/provn-gemma4-e2b-q4km.gguf --host 127.0.0.1 --port 8080
+provn server status
+```
+
+**Windows PowerShell**
+
+```powershell
+pip install "huggingface_hub[cli]"
+hf auth login
+New-Item -ItemType Directory -Force "$HOME\.provn\models"
+hf download kshitizz36/provn-gemma4-e2b-q4km provn-gemma4-e2b-q4km.gguf --local-dir "$HOME\.provn\models"
+llama-server -m "$HOME\.provn\models\provn-gemma4-e2b-q4km.gguf" --host 127.0.0.1 --port 8080
+provn server status
+```
 
 ---
 
@@ -76,8 +110,6 @@ git add config.py && git commit -m "oops"
 #
 #   Accept redaction? [y/N]
 ```
-
----
 
 ## Commands
 
